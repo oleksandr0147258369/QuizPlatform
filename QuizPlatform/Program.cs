@@ -1,14 +1,16 @@
-
-
-
-// See https://aka.ms/new-console-template for more information
-
 using System.Text;
+using QuizPlatform.Data;
+using QuizPlatform.Data.Entities;
 
-Console.InputEncoding = Encoding.UTF8;
-Console.OutputEncoding = Encoding.UTF8;
-Console.WriteLine("Привіт комана! Це Вова.");
+namespace QuizPlatform;
 
-Console.WriteLine("hello world from semeniuk");
-Console.Write("hello");
-Console.ReadLine();
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Hello World!");
+        var context = new ApplicationDbContext();
+        context.Users.Add(new User {Username = "test", Email = "test@test.com", Role = "test", PasswordHash = "test"});
+        context.SaveChanges();
+    }
+}
