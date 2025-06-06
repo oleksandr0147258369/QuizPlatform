@@ -5,13 +5,20 @@ namespace QuizPlatform.Data.Entities;
 [Table("TestSessions")]
 public class TestSession
 {
-    [Key] public int SessionId { get; set; }
+    [Key] public int TestSessionId { get; set; }
     [Required] public int UserId { get; set; }
-    [Required] public int TestId { get; set; }
+    
+    [Required] public bool IsTestHomework { get; set; }
+    public int? TestId { get; set; }
+    public int? TestHomeworkId { get; set; }
+    
     [Required] public DateTime StartedAt { get; set; }
-    [Required] public DateTime FinishedAt { get; set; }
-    [ForeignKey("TestId")] public virtual Test Test { get; set; }
+    [Required] public bool IsFinished { get; set; }
+    public DateTime? FinishedAt { get; set; }
+    
+    [ForeignKey("TestId")] public virtual Test? Test { get; set; }
     [ForeignKey("UserId")] public virtual User User { get; set; }
-
-    public virtual List<UserAnswer> UserAnswers { get; set; } = new();
+    [ForeignKey("TestHomeworkId")] public virtual TestHomework TestHomework { get; set; }
+    
+    public virtual List<UserAnswer> UserAnswers { get; set; }
 }

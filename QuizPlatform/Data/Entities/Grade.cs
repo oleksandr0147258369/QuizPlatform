@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace QuizPlatform.Data.Entities;
 
 [Table("Grades")]
-public class Category
+public class Grade
 {
     [Key] public int GradeId { get; set; }
-    [Required] public int SubjectId { get; set; }
-    [ForeignKey("SubjectId")] public virtual Subject Subject { get; set; }
+    [Required] public int Number { get; set; }
     
     public virtual List<Question> Questions { get; set; }
+    public virtual List<Test> Tests { get; set; }
 }

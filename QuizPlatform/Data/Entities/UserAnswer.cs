@@ -6,10 +6,9 @@ namespace QuizPlatform.Data.Entities;
 public class UserAnswer
 {
     [Key] public int UserAnswerId { get; set; }
-    [Required] public int SessionId { get; set; }
-    [Required] public int QuestionId { get; set; }
     [Required] public int AnswerId { get; set; }
-    [ForeignKey("SessionId")] public virtual TestSession Session { get; set; }
-    [ForeignKey("QuestionId")] public virtual Question Question { get; set; }
+    [Required] public int TestSessionId { get; set; }
+    
     [ForeignKey("AnswerId")] public virtual Answer Answer { get; set; }
+    [ForeignKey("TestSessionId")] public virtual TestSession TestSession { get; set; }
 }
