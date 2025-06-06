@@ -15,4 +15,5 @@ public class Test
     [ForeignKey("CategoryId")] public virtual Category Category { get; set; }
     [ForeignKey("SubjectId")] public virtual Subject Subject { get; set; }
     [ForeignKey("CreatedById")] public virtual User CreatedBy { get; set; }
+    public virtual List<Question> Questions { get; set; } = new();
 }

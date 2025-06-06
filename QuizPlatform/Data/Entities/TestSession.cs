@@ -12,4 +12,6 @@ public class TestSession
     [Required] public DateTime FinishedAt { get; set; }
     [ForeignKey("TestId")] public virtual Test Test { get; set; }
     [ForeignKey("UserId")] public virtual User User { get; set; }
+
+    public virtual List<UserAnswer> UserAnswers { get; set; } = new();
 }

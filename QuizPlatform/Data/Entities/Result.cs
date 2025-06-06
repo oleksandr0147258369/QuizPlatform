@@ -8,7 +8,9 @@ public class Result
     [Key] public int ResultId { get; set; }
     [Required] public int UserId { get; set; }
     [Required] public int TestId { get; set; }
+    [Required] public int TestSessionId { get; set; }
     [Required] public int Score { get; set; }
     [ForeignKey("UserId")] public virtual User User { get; set; }
     [ForeignKey("TestId")] public virtual Test Test { get; set; }
+    [ForeignKey("TestSessionId")] public virtual TestSession TestSession { get; set; }
 }
