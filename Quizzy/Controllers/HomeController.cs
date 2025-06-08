@@ -15,10 +15,15 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        return View("Home");
+    }
+
+    public IActionResult About()
+    {
         return View();
     }
 
-    public IActionResult Privacy()
+    public IActionResult Contact()
     {
         return View();
     }
