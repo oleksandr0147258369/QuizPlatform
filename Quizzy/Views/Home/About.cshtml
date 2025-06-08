@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "About Page";
+    ViewData["script"] = "about.js";
+    ViewData["stylesheet"] = "about.css";
+    Layout = "_Layout";
+}
+
+@Html.Partial("_Header")
+<div class="container" >
+    <div class="first-section">
+        <div class="container-text">
+            <div class="text">
+                <h1>About Us</h1>
+                <p>Quizzy is an educational platform designed to make learning more interactive and fun. We offer tools for creating, sharing, and completing quizzes on any subject. Whether you're a teacher looking to test your students or a learner wanting to challenge yourself, Quizzy provides an easy and effective way to assess knowledge.</p>
+            </div>
+            <div class="button">
+                <button>Get Started</button>
+            </div>
+        </div>
+        <div class="container-image">
+            <img src="~/images/home/studying.png" alt="studying">
+        </div>
+    </div>
+    <div class="second-section">
+        <div class="container-image">
+            <img src="~/images/home/second_photo.png" alt="second">
+        </div>
+        <div class="container-text">
+            <div class="text">
+                <h1>Empowering Learning Through Interactivity</h1>
+                <p>With a user-friendly interface and customizable features, Quizzy empowers users to build engaging quizzes in minutes. Our platform supports multimedia integration, instant feedback, and performance tracking — making it ideal for classrooms, remote learning, and self-study. We are committed to fostering curiosity and active learning through interactive experiences for all ages.</p>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_Footer")

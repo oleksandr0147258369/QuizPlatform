@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizPlatform", "QuizPlatform\QuizPlatform.csproj", "{446593D8-84D9-471B-80C3-8CCA2C89F918}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzy", "Quizzy\Quizzy.csproj", "{0BD10E70-6723-44B9-B1BC-5E4C6540131B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{446593D8-84D9-471B-80C3-8CCA2C89F918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{446593D8-84D9-471B-80C3-8CCA2C89F918}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{446593D8-84D9-471B-80C3-8CCA2C89F918}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{446593D8-84D9-471B-80C3-8CCA2C89F918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD10E70-6723-44B9-B1BC-5E4C6540131B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD10E70-6723-44B9-B1BC-5E4C6540131B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD10E70-6723-44B9-B1BC-5E4C6540131B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD10E70-6723-44B9-B1BC-5E4C6540131B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
