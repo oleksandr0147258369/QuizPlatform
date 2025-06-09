@@ -24,16 +24,47 @@ public class Program
             app.UseHsts();
         }
         
+
+        
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseStaticFiles();
 
         app.UseAuthorization();
-
-        app.UseStaticFiles();
+        
         app.MapControllerRoute(
+            name: "signup",
+            pattern: "signup1",
+            defaults: new { controller = "Home", action = "SignUp1" });
+        
+        app.MapControllerRoute(
+            name: "signup",
+            pattern: "signup2",
+            defaults: new { controller = "Home", action = "SignUp2" });
+        
+        app.MapControllerRoute(
+            name: "signup",
+            pattern: "signup3",
+            defaults: new { controller = "Home", action = "SignUp3" });
+        app.MapControllerRoute(
+            name: "signup",
+            pattern: "signup4",
+            defaults: new { controller = "Home", action = "SignUp4" });
+        
+        app.MapControllerRoute(
+            name: "signin",
+            pattern: "signin",
+            defaults: new { controller = "Home", action = "SignIn" });
+
+
+        app.MapControllerRoute(
+            
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+        
+       
+        
+        
         app.Run();
     }
 }
