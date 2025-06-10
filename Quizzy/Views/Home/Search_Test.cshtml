@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Search_Tests";
+    ViewData["script"] = "Search_Tests.js";
+    ViewData["stylesheet"] = "Search_Tests.css";
+    Layout = "_Layout";
+}
+
+
+<body>
+
+
+
+    <main>
+        <section class="stats-section">
+            <h1>Online tests from QUIZZY</h1>
+            <p>Interactive tasks to test knowledge and engage students in learning</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h2 id="tests-given">0</h2>
+                    <p>Tests created by teachers per year</p>
+                </div>
+                <div class="stat-card">
+                    <h2 id="tests-completed">0</h2>
+                    <p>Tests completed by students per year</p>
+                </div>
+            </div>
+
+            <form class="search-panel" method="get" asp-controller="Home" asp-action="Search">
+                <input type="text" name="query" placeholder="Search query..." />
+
+                <select name="subject">
+                    <option value="">Choose an item...</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="history">History</option>
+                    <option value="physics">Physics</option>
+                    <option value="ukrainian_language">Ukrainian language</option>
+                    <option value="ukrainian_literature">Ukrainian literature</option>
+                    <option value="geography">Geography</option>
+                    <option value="chemistry">Chemistry</option>
+                </select>
+
+                <select name="class">
+                    <option value="">Class...</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                </select>
+
+                <button type="submit" class="find-btn">Search</button>
+            </form>
+        </section>
+    </main>
+
+    
+  
+</body>
+</html>
