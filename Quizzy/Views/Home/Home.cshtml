@@ -1,9 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
     ViewData["script"] = "home.js";
     ViewData["stylesheet"] = "home.css";
     Layout = "_Layout";
 }
+
+    
+
 @Html.Partial("_Header")
 <div class="container" style = "padding-bottom: 0">
     <div class="first-section">
@@ -13,7 +16,7 @@
                 <p>Build interactive tests and quizzes easily with our platform</p>
             </div>
             <div class="button">
-                <button>Get Started</button>
+                <button onclick="location.href='/signup1'">Get Started</button>
             </div>
             <div class="img_checked">
                 <img src="~/images/home/Purple_check.svg" alt="img_checked">

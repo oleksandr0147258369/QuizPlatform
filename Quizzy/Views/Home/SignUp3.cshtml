@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Quizzy.net.Controllers.VerificationViewModel
+@{
+    ViewData["Title"] = "Sign up";
+    Layout = null;
+    string link = $"/signup2?regId={Model.RegId}";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/Sign_up3.css" />
+    <link rel="icon" type="image/png" href="~/images/logos/SmallerLogo.png">
+</head>
+
+<body>
+
+<div class = "main">
+    <div class="Details">
+        <div class = "logo">
+            <img src="~/images/logos/Logo1.png" alt="logo">
+        </div>
+        <h1>Enter a verification code</h1>
+        <p>Enter a verification code we sent to<br/><strong>@Model.Email</strong></p>
+    </div>
+    <div class="form">
+        <form asp-controller="Home" asp-action="SubmitSignUp3" method="post">
+            <input type="hidden" name="regId" value="@Model.RegId">
+            <input type="text" name="verificationCode" placeholder="Verification Code" required>
+            <div class="submit">
+                <a style="margin-right: 20px;" href=@link>Not your email?<br>Click here!</a>
+                <input type="submit" value="Sign Up">
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;">
+                    @Model.Error
+                </div>
+            }
+        </form>
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+</body>
+</html>
