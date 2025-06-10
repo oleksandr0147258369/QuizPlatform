@@ -14,6 +14,13 @@ namespace Quizzy.Controllers;
 
 public class HomeController : Controller
 {
+    private static ApplicationDbContext _db;
+
+    public HomeController(ApplicationDbContext dbContext)
+    {
+        
+        _db = dbContext;
+    }
     public IActionResult Index()
     {
         return View("Home");
@@ -28,8 +35,11 @@ public class HomeController : Controller
     {
         return View();
     }
-    
-    
+
+    public IActionResult Search_Test()
+    {
+        return View();
+    }
 
 
     public IActionResult Search(string query, string subject, int? classNumber)
@@ -52,7 +62,7 @@ public class HomeController : Controller
         return View(results.ToList());
     }
 
-
+}
 
 
 
