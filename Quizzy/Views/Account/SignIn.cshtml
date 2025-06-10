@@ -2,7 +2,8 @@
 @model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
-    Layout = null;
+    ViewData["stylesheet"] = "Sign_in";
+    Layout = "_Layout";
     string link = $"/signup2?regId={Model.RegId}";
 }
 <!DOCTYPE html>
@@ -30,7 +31,7 @@
                 <input type="email" name="Email" placeholder="Email" required>
                 <input type="password" name="Password" placeholder="Password" required>
                 <div class="submit">
-                    <a href="/signup1">Create an account</a>
+                    <a href="/Account/signup1">Create an account</a>
                     <input type="submit" value="Sign in">
                 </div>
                 @if (!string.IsNullOrEmpty(Model.Error))

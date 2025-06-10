@@ -2,18 +2,9 @@
 @model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
-    Layout = null;
+    ViewData["stylesheet"] = "Sign_up2.css";
+    Layout = "_Layout";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/Sign_up2.css" />
-    <link rel="icon" type="image/png" href="~/images/logos/SmallerLogo.png">
-</head>
-<body>
 
 <div class = "main">
     <div class="Details">
@@ -39,16 +30,4 @@
             }
         </form>
     </div>
-
-
-
 </div>
-
-
-
-
-
-
-
-</body>
-</html>
