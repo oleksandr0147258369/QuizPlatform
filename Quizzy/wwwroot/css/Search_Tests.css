@@ -1,0 +1,159 @@
+﻿
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #fef6f9;
+    color: #333;
+
+}
+
+
+
+
+
+
+
+
+
+
+main {
+    padding: 40px;
+    text-align: center;
+}
+
+.stats-section h1 {
+    font-size: 32px;
+    color: #4a4ab5;
+    margin-bottom: 10px;
+}
+
+.stats-section p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 250px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .stat-card h2 {
+        font-size: 36px;
+        color: #4a4ab5;
+    }
+
+.search-panel {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+    .search-panel input,
+    .search-panel select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        min-width: 180px;
+    }
+
+.find-btn {
+    background: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .stats-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+@media (max-width: 1000px) {
+    .burger {
+        display: block;
+    }
+
+    .menu-container {
+        display: none;
+    }
+
+        .menu-container.active {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            background-color: #9c80e7;
+            position: absolute;
+            padding: 0 20px;
+            width: calc(100% - 40px);
+            height: 400px;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+    .container.active {
+    }
+
+    .menu-container.active .menu {
+        padding: 0;
+    }
+
+        .menu-container.active .menu ul {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: left;
+            padding: 0;
+        }
+
+            .menu-container.active .menu ul li {
+                margin: 20px 0;
+            }
+
+                .menu-container.active .menu ul li a {
+                    font-size: 1.5rem;
+                }
+
+    .menu-container.active .Login {
+        height: 40%;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .menu-container.active .Login button {
+            width: 100%;
+        }
+
+        .menu-container.active .Login button {
+            margin: 20px 0;
+        }
+}
+
+

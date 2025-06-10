@@ -41,7 +41,10 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+    public IActionResult Search_Test()
+    {
+        return View();
+    }
     public IActionResult SignUp1()
     {
         
@@ -83,18 +86,37 @@ public class HomeController : Controller
         return View(new VerificationViewModel());
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+    public IActionResult Search(string query, string subject, int? classNumber)
+    {
+        var results = _db.Tests.AsQueryable();
+
+        if (!string.IsNullOrEmpty(query))
+        {
+            results = results.Where(t => t.Name.Contains(query) || t.Description.Contains(query));
+        }
+        if (!string.IsNullOrEmpty(subject))
+        {
+            results = results.Where(t => t.Subject.Name == subject);
+        }
+        if (classNumber.HasValue)
+        {
+            results = results.Where(t => t.GradeId == classNumber.Value);
+        }
+
+        return View(results.ToList());
+    }
+
+
+
+
+
+
+
+
+
+
     [HttpPost]
     public IActionResult SubmitSignUp1(string Name, string LastName, string MiddleName)
     {
