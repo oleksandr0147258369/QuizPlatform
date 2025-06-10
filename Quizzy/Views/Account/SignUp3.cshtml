@@ -1,21 +1,11 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Quizzy.net.Controllers.VerificationViewModel
+@model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
-    Layout = null;
-    string link = $"/signup2?regId={Model.RegId}";
+    ViewData["stylesheet"] = "Sign_up3.css";
+    Layout = "_Layout";
+    string link = $"/Account/signup2?regId={Model.RegId}";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/Sign_up3.css" />
-    <link rel="icon" type="image/png" href="~/images/logos/SmallerLogo.png">
-</head>
-
-<body>
 
 <div class = "main">
     <div class="Details">
@@ -26,7 +16,7 @@
         <p>Enter a verification code we sent to<br/><strong>@Model.Email</strong></p>
     </div>
     <div class="form">
-        <form asp-controller="Home" asp-action="SubmitSignUp3" method="post">
+        <form asp-controller="Account" asp-action="SubmitSignUp3" method="post">
             <input type="hidden" name="regId" value="@Model.RegId">
             <input type="text" name="verificationCode" placeholder="Verification Code" required>
             <div class="submit">
@@ -40,16 +30,5 @@
                 </div>
             }
         </form>
-
     </div>
-
-
-
 </div>
-
-
-
-
-
-</body>
-</html>

@@ -34,37 +34,33 @@ public class Program
         
         app.MapControllerRoute(
             name: "signup",
-            pattern: "signup1",
-            defaults: new { controller = "Home", action = "SignUp1" });
+            pattern: "Account/signup1",
+            defaults: new { controller = "Account", action = "SignUp1" });
         
         app.MapControllerRoute(
             name: "signup",
-            pattern: "signup2",
-            defaults: new { controller = "Home", action = "SignUp2" });
+            pattern: "Account/signup2",
+            defaults: new { controller = "Account", action = "SignUp2" });
         
         app.MapControllerRoute(
             name: "signup",
-            pattern: "signup3",
-            defaults: new { controller = "Home", action = "SignUp3" });
+            pattern: "Account/signup3",
+            defaults: new { controller = "Account", action = "SignUp3" });
         app.MapControllerRoute(
             name: "signup",
-            pattern: "signup4",
-            defaults: new { controller = "Home", action = "SignUp4" });
+            pattern: "Account/signup4",
+            defaults: new { controller = "Account", action = "SignUp4" });
         
         app.MapControllerRoute(
             name: "signin",
-            pattern: "signin",
-            defaults: new { controller = "Home", action = "SignIn" });
+            pattern: "Account/signin",
+            defaults: new { controller = "Account", action = "SignIn" });
 
 
         app.MapControllerRoute(
             
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        
-       
-        
-        
         app.Run();
     }
 }

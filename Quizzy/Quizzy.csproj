@@ -52,7 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Views\Account\" />
       <Folder Include="wwwroot\test\" />
     </ItemGroup>
 
