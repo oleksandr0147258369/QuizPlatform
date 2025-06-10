@@ -8,121 +8,6 @@ body{
     justify-content: center;
     background-color: #6e57d3;
 }
-/* header */
-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    background-color: #9c80e7;
-    color: black;
-    height: 100px;
-    margin: 0;
-    width: calc(100% - 40px);
-    /* border-top-right-radius: 10px;
-    border-top-left-radius: 10px; */
-    position: sticky;
-    top: 0;
-    z-index: 100;
-
-}
-.logo{
-    height: 40%;
-    width: 15%;
-    margin: 0 20px;
-}
-.logo img{
-    height: 100%;
-    width: auto;
-}
-
-.menu-container{
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 ;
-}
-.menu{
-    width: 50%;
-    padding: 0 20px;
-    color: black;
-    height: 100%;
-
-}
-.menu ul{
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* padding: 0 20px; */
-    margin: 0;
-    color: black;
-}
-.menu ul li{
-    list-style: none;
-    margin: 0 20px;
-}
-.menu ul li a{
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: white;
-}
-
-.menu ul li a:hover{
-    color: rgb(211, 203, 203);
-    transition: 0.2s;
-    text-decoration: underline;
-}
-
-.Login{
-    width: 40%;
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    align-items: center;
-    padding: 0;
-    background-color: #9c80e7;
-    color: black;
-    height: 100px;
-}
-.Login button{
-    background-color: #3b65d6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    margin: 0 20px;
-}
-
-.Login button:hover{
-    background-color: #3b65d6;
-    transition: 0.2s;
-    text-decoration: underline;
-}
-.burger {
-    cursor: pointer;
-    display:none;
-    transform-origin: top right;
-    margin: 0 20px;
-}
-
-.burger div {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    margin: 5px 0;
-    transition: 0.3s;
-
-}
-
-
-/* container */
-
 
 .container{
     width: 100%;
@@ -131,10 +16,6 @@ header{
     flex-direction: column;
     align-items: center;
 }
-
-/* .container .first-section, .container .second-section{
-    back
-} */
 
 .first-section, .second-section{
     display: flex;
@@ -157,15 +38,6 @@ header{
     width: 50%;
     margin: 0 50px;
     padding: 0;
-}
-
-
-
-
-
-.first-section #first-section-text{
-    display: gird;
-    grid-template-rows: 3fr 1fr 2fr;
 }
 .first-section #first-section-text .img_checked{
    width: 100%;

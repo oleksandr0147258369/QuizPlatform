@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Quizzy.Models.VerificationViewModel
+@{
+    ViewData["Title"] = "Sign up";
+    ViewData["stylesheet"] = "Sign_up4.css";
+    Layout = "_Layout";
+    string link = $"/Account/signup2?regId={Model.RegId}";
+}
+
+<div class = "main">
+    <div class="Details">
+        <div class = "logo">
+            <img src="~/images/logos/Logo1.png" alt="logo">
+        </div>
+        <h1>Finish Your Registration</h1>
+        <p>Pick Your Role and Enter Your Password</p>
+    </div>
+    <div class="form">
+        <form asp-controller="Account" asp-action="SubmitSignUp4" method="post">
+            <input type="hidden" name="regId" value="@Model.RegId">
+            <input type="hidden" name="IsTeacher" id="isTeacherInput" value="true">
+            <button type="button" id="roleToggle" style="font-size: 20px;">I am teacher</button>
+            <input type="password" name="Password" placeholder="Password" required>
+            <div class="submit">
+                <a style="margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
+                <input type="submit" value="Sign Up">
+            </div>
+        </form>
+    </div>    
+</div>
+
+<script>
+        const button = document.getElementById('roleToggle');
+        const hidden = document.getElementById('isTeacherInput');
+        let isTeacher = true;
+    
+        button.addEventListener('click', () => {
+          isTeacher = !isTeacher;
+          button.textContent = isTeacher ? 'I am teacher' : 'I am student';
+          button.classList.toggle('active');
+          hidden.value = isTeacher;
+        });
+</script>
