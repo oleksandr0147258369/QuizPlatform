@@ -1,4 +1,4 @@
-namespace Quizzy.net.Models;
+namespace Quizzy.Models;
 
 public class ErrorViewModel
 {

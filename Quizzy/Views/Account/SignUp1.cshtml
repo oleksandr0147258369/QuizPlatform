@@ -32,12 +32,12 @@
         <p>Enter your name</p>
     </div>
     <div class="form">
-        <form asp-controller="Home" asp-action="SubmitSignUp1" method="post">
+        <form asp-controller="Account" asp-action="SubmitSignUp1" method="post">
             <input type="text" name="Name" placeholder="Name" required>
             <input type="text" name="LastName" placeholder="Last Name" required>
             <input type="text" name="MiddleName" placeholder="Middle Name (optional)">
             <div class="submit">
-                <a style = "margin-right: 20px;" href="/signin">Have an account?<br>Sign in!</a>
+                <a style = "margin-right: 20px;" href="/Account/signin">Have an account?<br>Sign in!</a>
                 <input type="submit" value="Next">
             </div>
             @if (ViewBag.Error != null)
@@ -48,21 +48,8 @@
             }
             
         </form>
-
-        
         </div>
-
-
-
 </div>
-
-
-
-
-
-
-
-
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Quizzy.net.Controllers.VerificationViewModel
+@model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
     Layout = null;
@@ -24,11 +24,11 @@
         <p>Enter your Email to verify your personal information</p>
     </div>
     <div class="form">
-        <form asp-controller="Home" asp-action="SubmitSignUp2" method="post">
+        <form asp-controller="Account" asp-action="SubmitSignUp2" method="post">
             <input type="hidden" name="registrationId" value="@Model.RegId"/>
             <input type="email" name="Email" placeholder="Email" required>
             <div class="submit">
-                <a style = "margin-right: 20px;" href="/signin">Have an account?<br>Log in!</a>
+                <a style = "margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
                 <input type="submit" value="Sign Up">
             </div>
             @if (!string.IsNullOrEmpty(Model.Error))

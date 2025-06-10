@@ -1,9 +1,9 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Quizzy.net.Controllers.VerificationViewModel
+@model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
     Layout = null;
-    string link = $"/signup2?regId={Model.RegId}";
+    string link = $"/Account/signup2?regId={Model.RegId}";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -26,13 +26,13 @@
             <p>Pick Your Role and Enter Your Password</p>
         </div>
         <div class="form">
-            <form asp-controller="Home" asp-action="SubmitSignUp4" method="post">
+            <form asp-controller="Account" asp-action="SubmitSignUp4" method="post">
                 <input type="hidden" name="regId" value="@Model.RegId">
                 <input type="hidden" name="IsTeacher" id="isTeacherInput" value="true">
                 <button type="button" id="roleToggle" style="font-size: 20px;">I am teacher</button>
                 <input type="password" name="Password" placeholder="Password" required>
                 <div class="submit">
-                    <a style="margin-right: 20px;" href="/signin">Have an account?<br>Log in!</a>
+                    <a style="margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
                     <input type="submit" value="Sign Up">
                 </div>
             </form>
