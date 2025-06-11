@@ -258,11 +258,50 @@ width: 70%;
 .container .container-text .button button:hover{
     transition: 0.2s;
     text-decoration: underline;
-} 
+}
 
 
 
 
+.model-container{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.model-content{
+    height: auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: auto;
+}
+
+.model-content h1{
+    font-size: 2rem;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.model-content .close-button{
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.model-content .closing-button{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
 
 
 
@@ -376,7 +415,12 @@ width: 70%;
         height: auto;
         object-fit: cover;
     }
-
+    
+    
+    
+    .model-content{
+        width: 60%;
+    }
 
 }
 
@@ -390,5 +434,11 @@ width: 70%;
         width: 90%;
     }
 }
+
+
+
+
+
+
 
 

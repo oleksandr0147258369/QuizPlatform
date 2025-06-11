@@ -81,7 +81,8 @@ form input{
     width: calc(100% - 20px);
     height: 40px;
     padding: 10px;
-    margin: 20px 0;
+    margin: 10px 0;
+    margin-top: 5px;
     border-radius: 5px;
     border: none;
     font-size: 20px;
@@ -124,6 +125,16 @@ form input[type="submit"]{
     margin-right: 0;
     transition: all 200ms ease;
     color: white;
+}
+
+
+.form form label{
+    color: white;
+    align-self: flex-start;
+    font-size: 1.4rem;
+    margin: 0;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 form input[type="submit"]:hover{

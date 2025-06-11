@@ -2,9 +2,8 @@
 @model Quizzy.Models.VerificationViewModel
 @{
     ViewData["Title"] = "Sign up";
-    ViewData["stylesheet"] = "Sign_in";
+    ViewData["stylesheet"] = "Sign_in.css";
     Layout = "_Layout";
-    string link = $"/signup2?regId={Model.RegId}";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -27,9 +26,11 @@
             <p>to continue to Quizzy</p>
         </div>
         <div class="form">
-            <form asp-controller="Home" asp-action="SubmitSignIn" method="post">
-                <input type="email" name="Email" placeholder="Email" required>
-                <input type="password" name="Password" placeholder="Password" required>
+            <form asp-controller="Account" asp-action="SubmitSignIn" method="post">
+                <label for="Email" >Email:</label>
+                <input type="email" id="Email" name="Email" placeholder="Email" required>
+                <label for="Password">Password:</label>
+                <input type="password" id = "Password" name="Password" placeholder="Password" required>
                 <div class="submit">
                     <a href="/Account/signup1">Create an account</a>
                     <input type="submit" value="Sign in">

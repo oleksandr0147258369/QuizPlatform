@@ -18,7 +18,8 @@
     <div class="form">
         <form asp-controller="Account" asp-action="SubmitSignUp3" method="post">
             <input type="hidden" name="regId" value="@Model.RegId">
-            <input type="text" name="verificationCode" placeholder="Verification Code" required>
+            <label for="text">Verification code:</label>
+            <input type="text" id = "text" name="verificationCode" placeholder="Verification Code" required>
             <div class="submit">
                 <a style="margin-right: 20px;" href=@link>Not your email?<br>Click here!</a>
                 <input type="submit" value="Sign Up">

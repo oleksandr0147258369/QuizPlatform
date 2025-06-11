@@ -20,7 +20,8 @@
             <input type="hidden" name="regId" value="@Model.RegId">
             <input type="hidden" name="IsTeacher" id="isTeacherInput" value="true">
             <button type="button" id="roleToggle" style="font-size: 20px;">I am teacher</button>
-            <input type="password" name="Password" placeholder="Password" required>
+            <label for="Password">Password:</label>
+            <input type="password" id = "Password" name="Password" placeholder="Password" required>
             <div class="submit">
                 <a style="margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
                 <input type="submit" value="Sign Up">
