@@ -79,7 +79,8 @@ form input{
     width: calc(100% - 20px);
     padding: 10px;
     height: 40px;
-    margin: 20px 0;
+    margin: 10px 0;
+    margin-top: 5px;
     border-radius: 5px;
     border: none;
     font-size: 20px;
@@ -127,6 +128,16 @@ form input[type="submit"]{
 form input[type="submit"]:hover{
     background-color: #2952c8;
     cursor: pointer;
+}
+
+
+.form form label{
+    color: white;
+    align-self: flex-start;
+    font-size: 1.4rem;
+    margin: 0;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 

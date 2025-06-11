@@ -17,7 +17,8 @@
     <div class="form">
         <form asp-controller="Account" asp-action="SubmitSignUp2" method="post">
             <input type="hidden" name="registrationId" value="@Model.RegId"/>
-            <input type="email" name="Email" placeholder="Email" required>
+            <label for="Email">Email:</label>
+            <input type="email" name="Email" id = "Email" placeholder="Email" required>
             <div class="submit">
                 <a style = "margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
                 <input type="submit" value="Sign Up">
