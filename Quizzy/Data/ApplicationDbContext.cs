@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Quizzy.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
 {
     public DbSet<Answer> Answers { get; set; }
     public DbSet<Grade> Grades { get; set; }
@@ -14,7 +16,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Test> Tests { get; set; }
     public DbSet<TestHomework> TestHomeworks { get; set; }
     public DbSet<TestSession> TestSessions { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<UserAnswer> UserAnswers { get; set; }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options){}

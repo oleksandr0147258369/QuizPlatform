@@ -19,18 +19,18 @@ public class UserViewModel
     public string? OldPassword { get; set; }
     public string? NewPassword { get; set; }
 
-    public UserViewModel(User user)
+    public UserViewModel(UserEntity userEntity)
     {
-        FirstName = user.FirstName;
-        MiddleName = user.MiddleName;
-        LastName = user.LastName;
-        Email = user.Email;
-        PhoneNumber = user.PhoneNumber;
-        SchoolName = user.School.Name;
-        About = user.About;
-        PhotoPath = user.PhotoPath;
-        CurrentPassword = user.Password;
+        FirstName = userEntity.FirstName;
+        MiddleName = userEntity.MiddleName;
+        LastName = userEntity.LastName;
+        Email = userEntity.Email;
+        PhoneNumber = userEntity.PhoneNumber;
+        SchoolName = userEntity.School.Name;
+        About = userEntity.About;
+        PhotoPath = userEntity.PhotoPath;
+        CurrentPassword = userEntity.Password;
 
-        Id = user.UserId;
+        Id = userEntity.UserId;
     }
 }

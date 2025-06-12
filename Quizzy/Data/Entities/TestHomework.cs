@@ -14,6 +14,6 @@ public class TestHomework
     [Required] public bool HasTimeToComplete { get; set; }
     public TimeSpan? TimeToComplete { get; set; }
     
-    [ForeignKey("CreatedById")] public User CreatedBy { get; set; }
+    [ForeignKey("CreatedById")] public UserEntity CreatedBy { get; set; }
     [ForeignKey("TestId")] public Test Test { get; set; }
 }

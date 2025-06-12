@@ -93,7 +93,7 @@ public class HomeController : Controller
         var fromAddress = new MailAddress("quizzytests@gmail.com", "Quizzy");
         var toAddress = new MailAddress("quizzytests@gmail.com");
         const string fromPassword = "eplc imyv edac hxzn"; 
-        const string subject = "User Message";
+        const string subject = "UserEntity Message";
         string body = $"Message from {name} - {email}:\n{message1}";
    
         var smtp = new SmtpClient

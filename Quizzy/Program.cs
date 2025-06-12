@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quizzy.Data;
+using Quizzy.Data.Entities.Identity;
+using Quizzy.Interfaces;
+using Quizzy.Services;
 
 namespace Quizzy;
 
@@ -11,52 +15,39 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
-        builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        
+        builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+        
+        builder.Services.AddScoped<ISMTPService, SMTPService>();
         
         var app = builder.Build();
-        var scope = app.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        // Configure the HTTP request pipeline.
+        
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
         
-
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         
         app.UseHttpsRedirection();
         app.UseRouting();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
+        
+        builder.Services.AddControllersWithViews();
 
         app.UseAuthorization();
         
-        app.MapControllerRoute(
-            name: "signup",
-            pattern: "Account/signup1",
-            defaults: new { controller = "Account", action = "SignUp1" });
-        
-        app.MapControllerRoute(
-            name: "signup",
-            pattern: "Account/signup2",
-            defaults: new { controller = "Account", action = "SignUp2" });
-        
-        app.MapControllerRoute(
-            name: "signup",
-            pattern: "Account/signup3",
-            defaults: new { controller = "Account", action = "SignUp3" });
-        app.MapControllerRoute(
-            name: "signup",
-            pattern: "Account/signup4",
-            defaults: new { controller = "Account", action = "SignUp4" });
-        
-        app.MapControllerRoute(
-            name: "signin",
-            pattern: "Account/signin",
-            defaults: new { controller = "Account", action = "SignIn" });
-
-
         app.MapControllerRoute(
             
             name: "default",
