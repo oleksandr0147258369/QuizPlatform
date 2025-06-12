@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Preferences Page";
+    ViewData["stylesheet"] = "preferences.css";
+    Layout = "_Layout";
+}
+@model Quizzy.Models.UserViewModel
+
+<h2>title</h2>
+<form asp-controller="Account" asp-action="SavePreferences"></form>

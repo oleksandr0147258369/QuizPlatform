@@ -24,6 +24,32 @@ public class AccountController : Controller
         _logger = logger;
         _db = dbContext;
     }
+
+    public IActionResult Preferences(int id)
+    {
+        return View(new UserViewModel(_db.Users.Find(id)));
+    }
+
+    public IActionResult SavePreferences(UserViewModel model)
+    {
+        var user = _db.Users.Find(model.Id);
+        user.FirstName = model.FirstName;
+        user.MiddleName = model.MiddleName;
+        user.LastName = model.LastName;
+        var school = _db.Schools.Find(model.SchoolName);
+        if (school != null)
+        {
+            user.School = school;
+            user.SchoolId = school.SchoolId;
+        }
+        
+        user.Email = model.Email;
+        user.PhoneNumber = model.PhoneNumber;
+        user.About = model.About;
+        
+        _db.Users.Update(user);
+        
+    }
     
     public IActionResult SignUp1()
     {
@@ -169,7 +195,7 @@ public class AccountController : Controller
         }
         
         
-        return RedirectToAction("Index");
+        return RedirectToAction("~/Views/Home/Home");
     }
 
     [HttpPost]
@@ -178,7 +204,7 @@ public class AccountController : Controller
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == Email);
         if (user != null && PasswordHelper.VerifyPassword(user.Password, Password))
         {
-            return RedirectToAction("Index");
+            return View("~/Home/Index");
         }
         else
         {
