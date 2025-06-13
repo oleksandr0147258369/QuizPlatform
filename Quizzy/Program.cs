@@ -16,6 +16,8 @@ public class Program
         var app = builder.Build();
         var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        Console.WriteLine("Connection string: " + context.Database.GetDbConnection().ConnectionString);
+
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -55,6 +57,14 @@ public class Program
             name: "signin",
             pattern: "Account/signin",
             defaults: new { controller = "Account", action = "SignIn" });
+        
+        
+        app.MapControllerRoute(
+            name: "SearchTests",
+            pattern: "Tests/Search_Tests",
+            defaults: new { controller = "Home", action = "Search_Test" });
+        
+        
 
 
         app.MapControllerRoute(

@@ -1,0 +1,153 @@
+@model TestsListViewModel
+@using Quizzy/Controllers
+@{
+   
+    Layout = null;
+}
+
+<head>
+    <title>Search Test</title>
+    <link rel="stylesheet" href="~/css/Search_Tests.css">
+    <script src="~/js/Search_Tests.js"></script>
+</head>
+
+
+
+
+@Html.Partial("Header_Main")
+<div class = "main">
+    <div class = "first">
+        <section class="stats-section" >
+            <h1>Online tests from QUIZZY</h1>
+            <p>Interactive tasks to test knowledge and engage students in learning</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h2 id="tests-given">0</h2>
+                    <p>Tests created by teachers per year</p>
+                </div>
+                <div class="stat-card">
+                    <h2 id="tests-completed">0</h2>
+                    <p>Tests completed by students per year</p>
+                </div>
+            </div>
+
+            <form class="search-panel" method="post" asp-controller="Tests" asp-action="Search">
+                <input type="text" name="query" placeholder="Search query..." />
+
+                <select name="subject">
+                    <option value="">Choose an item...</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="history">History</option>
+                    <option value="physics">Physics</option>
+                    <option value="ukrainian_language">Ukrainian language</option>
+                    <option value="ukrainian_literature">Ukrainian literature</option>
+                    <option value="geography">Geography</option>
+                    <option value="chemistry">Chemistry</option>
+                </select>
+
+                <select name="class">
+                    <option value="">Class...</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                </select>
+
+                <button type="submit" class="find-btn">Search</button>
+            </form>
+        </section>
+        <div class = "forPhoto" >
+            <img src="~/images/home/studying.png" alt="" style = "width: 100%;height: auto">
+        </div>
+    </div>
+    
+    @if (Model.Show)
+    {
+
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            
+            <div class="model-container">
+                <div class="model-content">
+                    <div class = "closing-button">
+                        <span class="close-button" onclick="closeModel()">&times;</span>
+                    </div>
+
+                    <h1>No tests found</h1>
+                </div>
+            </div>
+            <script>
+                window.onload = function () {
+                    const modal = document.querySelector('.model-container');
+                    modal.style.display = 'flex';
+                };
+            </script>
+        }
+
+        @if (string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="second">
+                <h1>All Tests</h1>
+                @foreach (var t in Model.Tests)
+                {
+                    <div class="tests-grid">
+                        <div class="test-card">
+                            <h3 class="test-title">@t.Name</h3>
+                            <p class="test-date">Created: @t.CreatedUtc.ToShortDateString()</p>
+                            @if (!string.IsNullOrEmpty(t.Description))
+                            {
+                                <p class="test-description">@t.Description</p>
+                            }
+
+                            <ul class="test-info">
+                                <li>Grade - @t.Grade</li>
+                                <li>Subject - @t.Subject</li>
+                                <li>Number of questions - @t.QuestionsQuantity</li>
+                            </ul>
+
+                            <div class="test-badges">
+                                @if (t.IsCopyable)
+                                {
+                                    <span class="badge copyable">Allowed to copy</span>
+                                }
+                                @if (!t.IsCopyable)
+                                {
+                                    <span class="badge private">Not allowed to copy</span>
+                                }
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        }
+    }
+
+
+
+    @* <div class = "pagination"> *@
+    @*     @if (Model.TotalPages > 1) *@
+    @*     { *@
+    @*         @for (int i = 1; i <= Model.TotalPages; i++) *@
+    @*         { *@
+    @*             <li class="page-item @(i == Model.CurrentPage ? "active" : "")"> *@
+    @*                 <a class="page-link" asp-action="" asp-route-page="@i">@i</a> *@
+    @*             </li> *@
+    @*         } *@
+    @*     } *@
+    @* </div> *@
+    
+    
+
+</div>
+
+
+@Html.Partial("_Footer")
+
+
