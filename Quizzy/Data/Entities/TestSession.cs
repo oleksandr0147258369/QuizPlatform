@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data.Entities;
 [Table("TestSessions")]

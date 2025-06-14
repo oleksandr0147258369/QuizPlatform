@@ -3,6 +3,7 @@
     ViewData["stylesheet"] = "Sign_up1.css";
     Layout = "_Layout";
 }
+@model Quizzy.Models.RegisterViewModel
 <div class = "main">
     <div class="Details">
         <div class = "logo">
@@ -13,26 +14,30 @@
     </div>
     <div class="form">
         <form asp-controller="Account" asp-action="SignUp1" method="post">
-            <label for="Name">Name:</label>
-            <input type="text" id="Name" name="Name" placeholder="Name" required>
+            @*<div asp-validation-summary="ModelOnly"></div>*@
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
 
-            <label for="LastName">Last Name:</label>
-            <input type="text" id="LastName" name="LastName" placeholder="Last Name" required>
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
 
-            <label for="MiddleName">Middle Name (optional):</label>
-            <input type="text" id="MiddleName" name="MiddleName" placeholder="Middle Name (optional)">
+            <label asp-for="MiddleName" class="form-label"></label>
+            <input asp-for="MiddleName" class="form-control" />
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
 
             <div class="submit">
                 <a style="margin-right: 20px;" href="/Account/signin">Have an account?<br>Sign in!</a>
                 <input type="submit" value="Next">
             </div>
 
-            @if (ViewBag.Error != null)
-            {
-                <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;">
-                    @ViewBag.Error
-                </div>
-            }
+            @* @if (ViewBag.Error != null) *@
+            @* { *@
+            @*     <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;"> *@
+            @*         @ViewBag.Error *@
+            @*     </div> *@
+            @* } *@
         </form>
 
     </div>

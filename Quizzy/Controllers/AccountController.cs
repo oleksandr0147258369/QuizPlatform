@@ -11,6 +11,7 @@ using Quizzy.Data;
 using Quizzy.Data.Entities;
 using Quizzy.Data.Entities.Identity;
 using Quizzy.Models;
+using Quizzy.Services;
 
 namespace Quizzy.Controllers;
 
@@ -57,47 +58,112 @@ public class AccountController(UserManager<UserEntity> userManager,
     {
         return View();
     }
-
     [HttpPost]
     public IActionResult SignUp1(RegisterViewModel model)
     {
-        if (!ModelState.IsValid)
+        Console.WriteLine(model.FirstName + " " + model.LastName);
+        if (string.IsNullOrEmpty(model.LastName))
         {
-            return View(model);
+            ModelState.AddModelError("", "Last name is required.");
         }
-        
-        return View("SignUp2", model);
-    }
 
+        if (string.IsNullOrEmpty(model.FirstName))
+        {
+            ModelState.AddModelError("", "First name is required.");
+        }
+        if (string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName))
+            return View(model);
+        Console.WriteLine(model.FirstName + " " + model.LastName + "return");
+        return View("SignUp2", model);
+        // return RedirectToAction(nameof(SignUp2), "Account", model);
+    }
     [HttpPost]
     public IActionResult SignUp2(RegisterViewModel model)
     {
-        return View();
+        // Store user input from step 2
+        TempData["FirstName"] = model.FirstName;
+        TempData["LastName"] = model.LastName;
+        TempData["MiddleName"] = model.MiddleName;
+        TempData["Email"] = model.Email;
+
+        // Generate and store code securely
+        TempData["VerificationCode"] = GenerateRandomCode(8);
+
+        return RedirectToAction("SignUp3Get");
     }
 
-    [HttpPost]
-    public IActionResult SignUp4(long regId)
+    [HttpGet]
+    public IActionResult SignUp3Get()
     {
-        return View(new VerificationViewModel
+        var model = new RegisterViewModel
         {
-            RegId = regId,
-            Error = null,
-            Email = String.Empty
-        });
+            FirstName = TempData["FirstName"]?.ToString(),
+            LastName = TempData["LastName"]?.ToString(),
+            MiddleName = TempData["MiddleName"]?.ToString(),
+            Email = TempData["Email"]?.ToString()
+        };
+
+        // Resave TempData for next request
+        TempData.Keep();
+
+        var code = TempData["VerificationCode"]?.ToString();
+        TempData.Keep("VerificationCode");
+
+        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(code))
+            return RedirectToAction("SignUp1"); // fallback
+
+        new SMTPService().SendEmail(model.Email, code, model.FirstName);
+        return View("SignUp3", model);
+    }
+    [HttpPost]
+    public IActionResult SignUp3(RegisterViewModel model)
+    {
+        var userCode = model.UsersVerificationCode;
+        Console.WriteLine(TempData.Peek("VerificationCode") + userCode);
+
+        if (string.IsNullOrEmpty(userCode) || TempData.Peek("VerificationCode").ToString() != userCode)
+        {
+            ModelState.AddModelError("UsersVerificationCode", "Invalid verification code.");
+            return View(model);
+        }
+
+        // Carry TempData forward for SignUp4
+        TempData.Keep();
+
+        return View("SignUp4", model);
+    }
+    [HttpPost]
+    public  async Task<IActionResult> SignUp4(RegisterViewModel model)
+    {
+        var user = mapper.Map<UserEntity>(model);
+        Console.WriteLine(user.UserName);
+        Console.WriteLine(user.Email);
+        Console.WriteLine(user.FirstName);
+        Console.WriteLine(user.MiddleName);
+        Console.WriteLine(user.LastName);
+        Console.WriteLine(user.PasswordHash);
+        Console.WriteLine(user.FirstName);
+        var res = await userManager.CreateAsync(user, model.Password);
+        if (res.Succeeded)
+        {
+            if (model.IsTeacher)
+                await userManager.AddToRoleAsync(user, "Teacher");
+            else await userManager.AddToRoleAsync(user, "Student");
+            await signInManager.SignInAsync(user, isPersistent: false);
+            return View("~/Views/Home/Home.cshtml");
+        }
+
+        foreach (var error in res.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+        return View(model);
     }
     [HttpGet]
     public IActionResult SignIn()
     {
         return View(new VerificationViewModel());
     }
-    [HttpPost]
-    
-    [HttpPost]
-    
-    
-    
-    
-    
     
    static string GenerateRandomCode(int length)
    {
@@ -117,21 +183,5 @@ public class AccountController(UserManager<UserEntity> userManager,
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-}
-
-public static class PasswordHelper
-{
-    private static readonly PasswordHasher<object> hasher = new PasswordHasher<object>();
-
-    public static string HashPassword(string password)
-    {
-        return hasher.HashPassword(null, password);
-    }
-
-    public static bool VerifyPassword(string hashedPassword, string providedPassword)
-    {
-        var result = hasher.VerifyHashedPassword(null, hashedPassword, providedPassword);
-        return result == PasswordVerificationResult.Success;
     }
 }

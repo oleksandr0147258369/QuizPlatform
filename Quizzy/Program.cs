@@ -16,6 +16,9 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
         
+        builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+            opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        
         builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -29,6 +32,7 @@ public class Program
             .AddDefaultTokenProviders();
         
         builder.Services.AddScoped<ISMTPService, SMTPService>();
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         
         var app = builder.Build();
         
@@ -38,13 +42,11 @@ public class Program
             app.UseHsts();
         }
         
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         
         app.UseHttpsRedirection();
         app.UseRouting();
         app.MapStaticAssets();
         
-        builder.Services.AddControllersWithViews();
 
         app.UseAuthorization();
         

@@ -21,4 +21,14 @@ public class RegisterViewModel
     [Required(ErrorMessage = "Email Address is required")]
     public string Email { get; set; }
     
+    [Display(Name = "Verification Code")]
+    [Required(ErrorMessage = "Verification Code is required")]
+    public string UsersVerificationCode { get; set; }
+    [Display(Name = "Password")]
+    [DataType(DataType.Password)]
+    [Required(ErrorMessage = "Password is required")]
+    public string Password { get; set; }
+    
+    public bool IsTeacher { get; set; }
+    
 }
