@@ -30,3 +30,12 @@ function toggleMenu() {
     header.classList.toggle('active');
     container.classList.toggle('active');
 }
+
+
+
+
+
+function closeModel(){
+    const modelContainer = document.querySelector('.model-container');
+    modelContainer.style.display = 'none';
+}

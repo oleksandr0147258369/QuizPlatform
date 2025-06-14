@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/HeaderMain.css">
+    <script src="~/js/HeaderMain.js"></script>
+    <title>Document</title>
+</head>
+
+<header>
+    <div class="logo">
+        <img src="~/images/logos/Logo1.png" alt="logo">
+    </div>
+    
+    <div class="menu-container">
+        <div class="menu">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">All tests</a></li>
+                <li><a href="#">Add new Test</a></li>
+                <li><a href="#">My profile</a></li>
+            </ul>
+        </div>
+        <!-- Modify with c# -->
+        <div class="Login" onclick="toggleIcon()">
+            <p class = "name">John Doe</p>
+            <img src="~/images/home/icon.png" alt="Login">
+            <div class="triangle"></div>
+                
+        </div>
+        <div class="UserMenu">
+            <ul>
+                <li><a href="#">My profile</a></li>
+                <div class="stick"></div>
+                <li><a href="#">My tests</a></li>
+                <li><a href="#">Settings</a></li>
+                <div class="stick"></div>
+                <li><a href="#">Logout</a></li>
+                    
+            </ul>
+                
+                
+
+        </div>
+    </div>
+    <div class="burger" onclick="toggleMenu()" >
+        <div></div>
+        <div></div>
+    </div>
+    
+        
+</header>
+
+
+</html>
