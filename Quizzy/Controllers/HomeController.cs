@@ -23,13 +23,18 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        return View("Home");
+        TestsListViewModel model = new TestsListViewModel
+        {
+            Show = false
+        };
+        return View("~/Views/Tests/Search_Test.cshtml", model);
     }
 
     public IActionResult About()
     {
         return View();
     }
+    
 
     public IActionResult Contact()
     {
@@ -40,34 +45,7 @@ public class HomeController : Controller
         });
     }
 
-    public IActionResult Search_Test()
-    {
-        return View();
-    }
-
-
-    public IActionResult Search(string query, string subject, int? classNumber)
-    {
-        var results = _db.Tests.AsQueryable();
-
-        if (!string.IsNullOrEmpty(query))
-        {
-            results = results.Where(t => t.Name.Contains(query) || t.Description.Contains(query));
-        }
-        if (!string.IsNullOrEmpty(subject))
-        {
-            results = results.Where(t => t.Subject.Name == subject);
-        }
-        if (classNumber.HasValue)
-        {
-            results = results.Where(t => t.GradeId == classNumber.Value);
-        }
-
-        return View(results.ToList());
-    }
-
-
-
+    
     public IActionResult Contact_Submit(string Email, string Message, string Name)
     {
         try
