@@ -49,49 +49,8 @@ public class ApplicationDbContext : IdentityDbContext<UserEntity, RoleEntity, in
         );
 
         var createdDate = new DateTime(2024, 6, 13, 0, 0, 0, DateTimeKind.Utc);
+        createdDate = DateTime.UtcNow;
         
-
-        // modelBuilder.Entity<Test>().HasData(
-        //     new Test
-        //     {
-        //         TestId = 1,
-        //         Name = "Basic Mathematics Quiz",
-        //         Description = "A simple math quiz for beginners.",
-        //         CreatedById = 1,
-        //         CreatedUtc = createdDate,
-        //         SubjectId = 1,
-        //         GradeId = 5,
-        //         IsPrivate = false,
-        //         IsCopyable = true,
-        //         QuestionsQuantity = 10
-        //     },
-        //     new Test
-        //     {
-        //         TestId = 2,
-        //         Name = "World History Challenge",
-        //         Description = "Test your knowledge of ancient civilizations.",
-        //         CreatedById = 1,
-        //         CreatedUtc = createdDate,
-        //         SubjectId = 2,
-        //         GradeId = 7,
-        //         IsPrivate = false,
-        //         IsCopyable = false,
-        //         QuestionsQuantity = 15
-        //     },
-        //     new Test
-        //     {
-        //         TestId = 3,
-        //         Name = "Physics Fundamentals Test",
-        //         Description = "A physics quiz focusing on mechanics and motion.",
-        //         CreatedById = 1,
-        //         CreatedUtc = createdDate,
-        //         SubjectId = 3,
-        //         GradeId = 9,
-        //         IsPrivate = true,
-        //         IsCopyable = true,
-        //         QuestionsQuantity = 20
-        //     }
-        // );
 
         // identity 
         modelBuilder.Entity<UserRoleEntity>()
