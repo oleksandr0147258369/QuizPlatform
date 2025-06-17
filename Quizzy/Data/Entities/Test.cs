@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
+using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data.Entities;
 [Table("Tests")]
@@ -16,7 +18,7 @@ public class Test
     [Required] public bool IsCopyable { get; set; }
     [Required] public int QuestionsQuantity { get; set; }
     
-    [ForeignKey("CreatedById")] public virtual User CreatedBy { get; set; }
+    [ForeignKey( "CreatedById")] public virtual UserEntity CreatedBy { get; set; }
     [ForeignKey("SubjectId")] public virtual Subject Subject { get; set; }
     [ForeignKey("GradeId")] public virtual Grade Grade { get; set; }
     

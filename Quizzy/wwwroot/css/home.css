@@ -1,5 +1,15 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Use border-box sizing for predictable layout */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 body{
-    padding: 10px;
+    /*padding: 10px;*/
     padding-top: 0;
     margin: 0;
     display: flex;
@@ -22,7 +32,8 @@ body{
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
-    width: calc(100% - 40px);
+    /*width: calc(100% - 40px);*/
+    vidth: 100%;
     height: auto;
     margin-bottom: 0px;
     padding: 20px;
@@ -165,81 +176,9 @@ body{
 
 }
 
-
-
-@media (max-width: 1000px) {
-    .burger{
-        display: block;
-    }
-    .menu-container{
-        display: none;
-    }
-    
-    .menu-container.active{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; 
-        justify-content: flex-start;
-        background-color: #9c80e7;
-        position: absolute;
-        padding: 0 20px;
-        width: calc(100% - 40px);
-        height: 400px;
-        top: 100px;
-        left: 50%;
-        
-        transform: translateX(-50%);
-        z-index: 100;
-    }
-
-    .container.active{
-
-    }
-
-    .menu-container.active .menu{
-        padding: 0;
-    }
-    
-    .menu-container.active .menu ul{
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: left;
-        padding: 0;
-    }
-    .menu-container.active .menu ul li{
-        margin: 20px 0;
-    }
-    .menu-container.active .menu ul li a{
-        font-size: 1.5rem;
-    }
-    .menu-container.active .Login{
-        height: 40%;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        
-    }
-    .menu-container.active .Login button{
-        width: 100%;
-    
-    }
-    
-    .menu-container.active .Login button{
-        margin: 20px 0;
-    }
-
-
-
-
-   
-}
-
 @media (max-width: 800px) {
     .first-section .container-image img{
         width: 360px;
         height: auto;
     }
 }
-
-

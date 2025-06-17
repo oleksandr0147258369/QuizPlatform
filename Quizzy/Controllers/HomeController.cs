@@ -1,14 +1,8 @@
-using System.Collections.Concurrent;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Quizzy.Data.Entities;
 using Quizzy.Models;
 using System.Net;
 using System.Net.Mail;
-using Microsoft.AspNetCore.Identity;
 using Quizzy.Data;
-using Quizzy.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Quizzy.Controllers;
 
@@ -23,11 +17,7 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        TestsListViewModel model = new TestsListViewModel
-        {
-            Show = false
-        };
-        return View("~/Views/Tests/Search_Test.cshtml", model);
+        return View("Home");
     }
 
     public IActionResult About()
@@ -71,7 +61,7 @@ public class HomeController : Controller
         var fromAddress = new MailAddress("quizzytests@gmail.com", "Quizzy");
         var toAddress = new MailAddress("quizzytests@gmail.com");
         const string fromPassword = "eplc imyv edac hxzn"; 
-        const string subject = "User Message";
+        const string subject = "UserEntity Message";
         string body = $"Message from {name} - {email}:\n{message1}";
    
         var smtp = new SmtpClient
@@ -102,28 +92,3 @@ public class HomeController : Controller
     }
 
 }
-
-
-
-
-
-
-
-
-
-    
-
-
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-   

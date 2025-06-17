@@ -1,0 +1,37 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Quizzy.Models.LogInViewModel
+
+@{
+    ViewData["Title"] = "Sign in";
+    ViewData["stylesheet"] = "Sign_in.css";
+    Layout = "_Layout";
+    ViewData["HasHeader"] = false;
+    ViewData["HasFooter"] = false;
+}
+
+<div class="main">
+    <div class="Details">
+        <div class="logo">
+            <img src="~/images/logos/Logo1.png" alt="logo" />
+        </div>
+        <h1>Sign in</h1>
+        <p>to continue to Quizzy</p>
+    </div>
+
+    <div class="form">
+        <form asp-controller="Account" asp-action="LogIn" method="post">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+            <div class="submit">
+                <a href="/Account/signup1">Create an account</a>
+                <input type="submit" value="Sign in" />
+            </div>
+        </form>
+    </div>
+</div>

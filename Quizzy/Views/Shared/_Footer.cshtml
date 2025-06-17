@@ -10,9 +10,18 @@
             <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
                 <h4>Quick Links</h4>
                 <ul style="list-style: none; padding: 0;" class="underlined-list">
-                    <li><a href="/" style="color: white; ">Home</a></li>
-                    <li><a href="/Home/About" style="color: white; ">About</a></li>
-                    <li><a href="/Home/Contact" style="color: white; ">Contact</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="#" style="color: white; ">All Tests</a></li>
+                        <li><a href="#" style="color: white; ">Add New Test</a></li>
+                        <li><a href="/Account/Preferences" style="color: white; ">My Profile</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/" style="color: white; ">Home</a></li>
+                        <li><a href="/Home/About" style="color: white; ">About</a></li>
+                        <li><a href="/Home/Contact" style="color: white; ">Contact</a></li>
+                    }
                 </ul>
             </div>
 

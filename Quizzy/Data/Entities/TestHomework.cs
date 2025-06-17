@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data.Entities;
 [Table("TestHomeworks")]
@@ -14,6 +15,6 @@ public class TestHomework
     [Required] public bool HasTimeToComplete { get; set; }
     public TimeSpan? TimeToComplete { get; set; }
     
-    [ForeignKey("CreatedById")] public User CreatedBy { get; set; }
+    [ForeignKey("CreatedById")] public UserEntity CreatedBy { get; set; }
     [ForeignKey("TestId")] public Test Test { get; set; }
 }

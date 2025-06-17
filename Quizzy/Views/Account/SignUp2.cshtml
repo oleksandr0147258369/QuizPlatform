@@ -1,9 +1,11 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Quizzy.Models.VerificationViewModel
+@model Quizzy.Models.RegisterViewModel
 @{
     ViewData["Title"] = "Sign up";
     ViewData["stylesheet"] = "Sign_up2.css";
     Layout = "_Layout";
+    ViewData["HasHeader"] = false;
+    ViewData["HasFooter"] = false;
 }
 
 <div class = "main">
@@ -15,20 +17,25 @@
         <p>Enter your Email to verify your personal information</p>
     </div>
     <div class="form">
-        <form asp-controller="Account" asp-action="SubmitSignUp2" method="post">
-            <input type="hidden" name="registrationId" value="@Model.RegId"/>
-            <label for="Email">Email:</label>
-            <input type="email" name="Email" id = "Email" placeholder="Email" required>
+        <form asp-controller="Account" asp-action="SignUp2" method="post">
+            <input type="hidden" name="FirstName" value="@Model.FirstName"/>
+            <input type="hidden" name="MiddleName" value="@Model.MiddleName"/>
+            <input type="hidden" name="LastName" value="@Model.LastName"/>
+            
+            <label asp-for="Email" ></label>
+            <input asp-for="Email" />
+            <span asp-validation-for="Email"></span>
+            
             <div class="submit">
                 <a style = "margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>
                 <input type="submit" value="Sign Up">
             </div>
-            @if (!string.IsNullOrEmpty(Model.Error))
-            {
-                <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;">
-                    @Model.Error
-                </div>
-            }
+            @* @if (!string.IsNullOrEmpty(Model.Error)) *@
+            @* { *@
+            @*     <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;"> *@
+            @*         @Model.Error *@
+            @*     </div> *@
+            @* } *@
         </form>
     </div>
 </div>

@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+@model HeaderViewModel
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/HeaderMain.css">
     <script src="~/js/HeaderMain.js"></script>
-    <title>Document</title>
 </head>
 
 <header>
@@ -16,29 +12,32 @@
     <div class="menu-container">
         <div class="menu">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                @* <li><a href="/">Home</a></li> *@
+                @* <li><a href="/Home/About">About</a></li> *@
+                <li><a href="/Home/Contact">Contact</a></li>
                 <li><a href="#">All tests</a></li>
                 <li><a href="#">Add new Test</a></li>
-                <li><a href="#">My profile</a></li>
+                <li><a href="/Account/Preferences">My profile</a></li>
             </ul>
         </div>
-        <!-- Modify with c# -->
         <div class="Login" onclick="toggleIcon()">
-            <p class = "name">John Doe</p>
-            <img src="~/images/home/icon.png" alt="Login">
+            <p class = "name">@Model.UserName</p>
+            <img src="~/images/users/@Model.Image" alt="user image">
             <div class="triangle"></div>
                 
         </div>
         <div class="UserMenu">
             <ul>
-                <li><a href="#">My profile</a></li>
+                <li><a href="/Account/Preferences">My profile</a></li>
                 <div class="stick"></div>
                 <li><a href="#">My tests</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="/Account/Preferences">Settings</a></li>
                 <div class="stick"></div>
-                <li><a href="#">Logout</a></li>
+                <li>
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button class="header-button" type="submit">Logout</button>
+                    </form>
+                </li>
                     
             </ul>
                 
@@ -53,6 +52,3 @@
     
         
 </header>
-
-
-</html>
