@@ -1,0 +1,38 @@
+@page
+@using Quizzy.Constants
+@model Quizzy.Models.Tests.CreateViewModel
+@{
+    ViewData["HasFooter"] = false;
+    ViewData["HasHeader"] = false;
+    ViewData["stylesheet"] = "tests/create.css";
+    Layout = "_Layout";
+}
+
+<form asp-controller="Tests" asp-action="Create" method="post">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name"/>
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="Subject"></label>
+        <select asp-for="Subject">
+            <option value="">Choose a subject...</option>
+            @foreach (var s in Subjects.Values)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger mt-2">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+</form>

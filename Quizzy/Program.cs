@@ -9,17 +9,18 @@ namespace Quizzy;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello World!");
         var builder = WebApplication.CreateBuilder(args);
+
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
-        
+
         builder.Services.AddDbContext<ApplicationDbContext>(opt =>
             opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-        
-        builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
+
+        builder.Services
+            .AddIdentity<UserEntity, RoleEntity>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -30,30 +31,31 @@ public class Program
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        
+
         builder.Services.AddScoped<ISMTPService, SMTPService>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        
+
         var app = builder.Build();
-        
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
-        
-        
-        app.UseHttpsRedirection();
-        app.UseRouting();
-        app.MapStaticAssets();
-        
 
+        app.UseHttpsRedirection();
+        app.UseStaticFiles(); // <-- required to serve wwwroot content like images
+
+        app.UseRouting();
+
+        app.UseAuthentication(); // <-- MUST come before authorization
         app.UseAuthorization();
-        
+
         app.MapControllerRoute(
-            
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+        
+        await app.SeedData();
         app.Run();
     }
 }

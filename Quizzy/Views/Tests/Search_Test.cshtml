@@ -1,20 +1,11 @@
 @model TestsListViewModel
-@using Quizzy/Controllers
 @{
    
-    Layout = null;
+    Layout = "_Layout";
+    ViewData["Title"] = "Search Test";
+    ViewData["stylesheet"] = "Search_Tests.css";
+    ViewData["script"] = "Search_Tests.js";
 }
-
-<head>
-    <title>Search Test</title>
-    <link rel="stylesheet" href="~/css/Search_Tests.css">
-    <script src="~/js/Search_Tests.js"></script>
-</head>
-
-
-
-
-@Html.Partial("Header_Main")
 <div class = "main">
     <div class = "first">
         <section class="stats-section" >
@@ -142,12 +133,4 @@
     @*         } *@
     @*     } *@
     @* </div> *@
-    
-    
-
 </div>
-
-
-@Html.Partial("_Footer")
-
-

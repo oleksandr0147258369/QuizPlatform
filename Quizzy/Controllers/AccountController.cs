@@ -1,12 +1,7 @@
-using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Net;
-using System.Net.Mail;
-using System.Xml;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Quizzy.Data;
 using Quizzy.Data.Entities;
 using Quizzy.Data.Entities.Identity;
@@ -17,40 +12,122 @@ namespace Quizzy.Controllers;
 
 public class AccountController(UserManager<UserEntity> userManager,
     SignInManager<UserEntity> signInManager,
-    IMapper mapper) : Controller
+    IMapper mapper, ApplicationDbContext db) : Controller
 {
     
-    public IActionResult Preferences(int id)
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+        Console.WriteLine("User logged out.");
+        return RedirectToAction("Index", "Home");
+    }
+    [HttpGet]
+    public async Task<IActionResult> Preferences()
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+            return RedirectToAction("Login", "Account");
+        var model = mapper.Map<PreferencesViewModel>(user);
+        model.Schools = db.Schools.Select(s => s.Name).ToList();
+        Console.WriteLine("model image: " + model.PhotoName);
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Preferences(PreferencesViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            
+            model.Schools = db.Schools.Select(s => s.Name).ToList();
+            return View(model);
+        }
+
+        var user = await userManager.GetUserAsync(User);
+        mapper.Map(model, user);
+
+        if (!string.IsNullOrWhiteSpace(model.School))
+        {
+            var school = db.Schools.FirstOrDefault(s => s.Name == model.School);
+            if (school == null)
+            {
+                school = new School { Name = model.School };
+                db.Schools.Add(school);
+                await db.SaveChangesAsync();
+            }
+
+            user.SchoolId = school.SchoolId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.NewPassword))
+        {
+            var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                    Console.WriteLine(error.Description);
+                }
+
+                Console.WriteLine("errorchik");
+                model = mapper.Map(user, model);
+                model.Schools = db.Schools.Select(s => s.Name).ToList();
+                return View(model);
+            }
+        }
+
+        if (model.Photo != null && model.Photo.Length > 0)
+        {
+            Console.WriteLine("got into photo saving block");
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileExt = Path.GetExtension(model.Photo.FileName);
+            var fileName = $"{Guid.NewGuid()}{fileExt}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.Photo.CopyToAsync(fileStream);
+            }
+            System.IO.File.Delete(Path.Combine(uploadsFolder, user.Image));
+            user.Image = fileName;
+            model.PhotoName = fileName;
+        }
+
+        await userManager.UpdateAsync(user);
+        await db.SaveChangesAsync();
+        ViewBag.Success = "Changes saved successfully!";
+        model = mapper.Map<PreferencesViewModel>(user);
+        model.Schools = db.Schools.Select(s => s.Name).ToList();
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult LogIn()
     {
         return View();
     }
 
-    // public IActionResult SavePreferences(UserViewModel model)
-    // {
-    //     var user = _db.Users.Find(model.Id);
-    //     user.FirstName = model.FirstName;
-    //     user.MiddleName = model.MiddleName;
-    //     user.LastName = model.LastName;
-    //     var school = _db.Schools.Find(model.SchoolName);
-    //     if (school != null)
-    //     {
-    //         user.School = school;
-    //         user.SchoolId = school.SchoolId;
-    //     }
-    //     
-    //     user.Email = model.Email;
-    //     user.PhoneNumber = model.PhoneNumber;
-    //     user.About = model.About;
-    //     
-    //     _db.Users.Update(user);
-    //     return Redirect("/Account/Preferences");
-    // }
-
-
-    [HttpGet]
-    public IActionResult Login()
+    [HttpPost]
+    public async Task<IActionResult> LogIn(LogInViewModel model)
     {
-        return View();
+        if(!ModelState.IsValid)
+            return View(model);
+        var user = await userManager.FindByEmailAsync(model.Email);
+        if (user != null)
+        {
+            var res = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
+            if (res.Succeeded)
+            {
+                await signInManager.SignInAsync(user, isPersistent: false);
+                return Redirect("/");
+            }
+        }
+        ModelState.AddModelError("Password", "Invalid login attempt.");
+        return View(model);
     }
     
     [HttpGet]
@@ -135,14 +212,21 @@ public class AccountController(UserManager<UserEntity> userManager,
     [HttpPost]
     public  async Task<IActionResult> SignUp4(RegisterViewModel model)
     {
+        // if (!ModelState.IsValid)
+        // {
+        //     foreach (var error in res.Errors)
+        //     {
+        //         if (error.Code.Contains("Password"))
+        //             ModelState.AddModelError(nameof(model.Password), error.Description);
+        //         else
+        //             ModelState.AddModelError(string.Empty, error.Description);
+        //     }
+        //     return View(model);
+        // }
         var user = mapper.Map<UserEntity>(model);
-        Console.WriteLine(user.UserName);
-        Console.WriteLine(user.Email);
-        Console.WriteLine(user.FirstName);
-        Console.WriteLine(user.MiddleName);
-        Console.WriteLine(user.LastName);
-        Console.WriteLine(user.PasswordHash);
-        Console.WriteLine(user.FirstName);
+        user.Image = "/images/users/default.png";
+        user.CreatedUtc = DateTime.UtcNow;
+        user.EmailConfirmed = true;
         var res = await userManager.CreateAsync(user, model.Password);
         if (res.Succeeded)
         {
@@ -150,19 +234,26 @@ public class AccountController(UserManager<UserEntity> userManager,
                 await userManager.AddToRoleAsync(user, "Teacher");
             else await userManager.AddToRoleAsync(user, "Student");
             await signInManager.SignInAsync(user, isPersistent: false);
-            return View("~/Views/Home/Home.cshtml");
+            Console.WriteLine("creation of account successful!");
+            return RedirectToAction("Index", "Home");
         }
+        Console.WriteLine("creation of account failed!");
 
+        // foreach (var error in res.Errors)
+        // {
+        //     ModelState.AddModelError("", error.Description);
+        //     Console.WriteLine(error.Description);
+        // }
         foreach (var error in res.Errors)
         {
-            ModelState.AddModelError("", error.Description);
+            Console.WriteLine(error.Description);
+            if (error.Code.Contains("Password"))
+                ModelState.AddModelError(nameof(model.Password), error.Description);
+            else
+                ModelState.AddModelError(string.Empty, error.Description);
         }
+        Console.WriteLine("Errors");
         return View(model);
-    }
-    [HttpGet]
-    public IActionResult SignIn()
-    {
-        return View(new VerificationViewModel());
     }
     
    static string GenerateRandomCode(int length)
