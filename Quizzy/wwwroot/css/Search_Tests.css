@@ -1,0 +1,230 @@
+﻿
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #fef6f9;
+    color: #333;
+
+}
+
+
+
+
+
+
+
+
+
+
+main {
+    padding: 40px;
+    text-align: center;
+}
+
+.stats-section h1 {
+    font-size: 32px;
+    color: #4a4ab5;
+    margin-bottom: 10px;
+    margin-top: 29px;
+}
+
+.stats-section p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 250px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .stat-card h2 {
+        font-size: 36px;
+        color: #4a4ab5;
+    }
+
+.search-panel {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+    .search-panel input,
+    .search-panel select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        min-width: 180px;
+    }
+
+.find-btn {
+    background: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .stats-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+.results-section {
+    margin-top: 40px;
+    text-align: left;
+}
+
+.test-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    
+    align-items: center;
+    counter-reset: testCounter;
+}
+
+.test-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-left: 6px solid #3366cc;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 76, 179, 0.1);
+    width: 90%;
+    max-width: 1000px;
+    box-sizing: border-box;
+}
+
+    /* Лічильник зліва */
+    .test-card::before {
+        content: counter(testCounter, decimal);
+        counter-increment: testCounter;
+        position: absolute;
+        top: 15px;
+        left: -35px;
+        background-color: #e2ecff;
+        color: #3366cc;
+        border-radius: 50%;
+        padding: 10px 14px;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 0 4px rgba(51, 102, 204, 0.3);
+    }
+
+    /* Текст */
+    .test-card h3 {
+        margin: 0 0 8px 0;
+        color: #2a4f9c;
+        font-size: 20px;
+    }
+
+    .test-card p {
+        margin: 5px 0;
+        color: #444;
+        font-size: 16px;
+    }
+
+        .test-card p strong {
+            color: #2a4f9c;
+        }
+
+/* --- Велика цифра праворуч --- */
+.question-count {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 40px;
+    font-weight: bold;
+    color: rgba(51, 102, 204, 0.15); /* синя з прозорістю */
+    pointer-events: none;
+    user-select: none;
+}
+
+/* --- Адаптивність --- */
+@media (max-width: 768px) {
+    .test-card {
+        width: 95%;
+        padding: 18px;
+    }
+
+        .test-card::before {
+            left: -30px;
+            font-size: 15px;
+            padding: 8px 12px;
+        }
+
+    .question-count {
+        font-size: 32px;
+        right: 15px;
+        top: 15px;
+    }
+
+    .test-card h3 {
+        font-size: 18px;
+    }
+
+    .test-card p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .test-card {
+        width: 100%;
+        padding: 16px;
+    }
+
+        .test-card::before {
+            left: -28px;
+            font-size: 14px;
+            padding: 6px 10px;
+        }
+
+    .question-count {
+        font-size: 26px;
+        right: 12px;
+        top: 12px;
+    }
+
+    .test-card h3 {
+        font-size: 16px;
+    }
+
+    .test-card p {
+        font-size: 14px;
+    }
+}
+.test-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 76, 179, 0.15);
+}
+
+
