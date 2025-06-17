@@ -1,3 +1,12 @@
+<style>
+    ul li a{
+        color: white;
+        
+    }
+    ul li{
+        margin-top: 10px;
+    }
+</style>
 <footer style="background-color: #9d85df; padding: 40px; color: white; text-align: center;width: 100%; padding-top: 20px;margin-top: 0; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
     <div style="max-width: 1000px; margin: 0 auto;">
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; text-align: left; padding: 0 20px;">
@@ -12,9 +21,12 @@
                 <ul style="list-style: none; padding: 0;" class="underlined-list">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a href="#" style="color: white; ">All Tests</a></li>
-                        <li><a href="#" style="color: white; ">Add New Test</a></li>
-                        <li><a href="/Account/Preferences" style="color: white; ">My Profile</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/Home/About">About</a></li>
+                        <li><a href="/Home/Contact">Contact</a></li>
+                        <li><a href="#">All tests</a></li>
+                        <li><a href="#">Add new Test</a></li>
+                        <li><a href="/Account/Preferences">My profile</a></li>
                     }
                     else
                     {

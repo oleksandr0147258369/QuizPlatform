@@ -7,6 +7,10 @@ using Quizzy.Data.Entities;
 using Quizzy.Data.Entities.Identity;
 using Quizzy.Models;
 using Quizzy.Services;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Processing;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quizzy.Controllers;
 
@@ -30,6 +34,7 @@ public class AccountController(UserManager<UserEntity> userManager,
             return RedirectToAction("Login", "Account");
         var model = mapper.Map<PreferencesViewModel>(user);
         model.Schools = db.Schools.Select(s => s.Name).ToList();
+        model.second_error = false;
         Console.WriteLine("model image: " + model.PhotoName);
         return View(model);
     }
@@ -74,6 +79,7 @@ public class AccountController(UserManager<UserEntity> userManager,
                 Console.WriteLine("errorchik");
                 model = mapper.Map(user, model);
                 model.Schools = db.Schools.Select(s => s.Name).ToList();
+                model.second_error = true;
                 return View(model);
             }
         }
@@ -81,6 +87,7 @@ public class AccountController(UserManager<UserEntity> userManager,
         if (model.Photo != null && model.Photo.Length > 0)
         {
             Console.WriteLine("got into photo saving block");
+
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/users");
             Directory.CreateDirectory(uploadsFolder);
 
@@ -88,20 +95,45 @@ public class AccountController(UserManager<UserEntity> userManager,
             var fileName = $"{Guid.NewGuid()}{fileExt}";
             var filePath = Path.Combine(uploadsFolder, fileName);
 
+            // копіюємо файл на диск
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await model.Photo.CopyToAsync(fileStream);
             }
-            System.IO.File.Delete(Path.Combine(uploadsFolder, user.Image));
+
+            // валідовуємо картинку через ImageSharp
+            try
+            {
+                using (var image = await Image.LoadAsync(filePath))
+                {
+                    Console.WriteLine($"valid image, size: {image.Width}x{image.Height}");
+                }
+            }
+            catch (UnknownImageFormatException ex)
+            {
+                Console.WriteLine("invalid image: " + ex.Message);
+                System.IO.File.Delete(filePath);
+                ModelState.AddModelError("Photo", "Invalid image file.");
+                model = mapper.Map<PreferencesViewModel>(user);
+                model.Schools = db.Schools.Select(s => s.Name).ToList();
+                return View(model);
+            }
+
+            // якщо попереднє фото не дефолтне — видаляємо
+            if (user.Image != "default.png")
+                System.IO.File.Delete(Path.Combine(uploadsFolder, user.Image));
+
             user.Image = fileName;
             model.PhotoName = fileName;
         }
+
 
         await userManager.UpdateAsync(user);
         await db.SaveChangesAsync();
         ViewBag.Success = "Changes saved successfully!";
         model = mapper.Map<PreferencesViewModel>(user);
         model.Schools = db.Schools.Select(s => s.Name).ToList();
+        model.second_error = false;
         return View(model);
     }
 
@@ -151,16 +183,30 @@ public class AccountController(UserManager<UserEntity> userManager,
         if (string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName))
             return View(model);
         Console.WriteLine(model.FirstName + " " + model.LastName + "return");
+        ModelState.Clear();
         return View("SignUp2", model);
         // return RedirectToAction(nameof(SignUp2), "Account", model);
     }
+    [HttpGet]
+    public IActionResult SignUp2()
+    {
+        return View();
+    }
+
+
     [HttpPost]
-    public IActionResult SignUp2(RegisterViewModel model)
+    public async Task<IActionResult> SignUp2(RegisterViewModel model)
     {
         // Store user input from step 2
         TempData["FirstName"] = model.FirstName;
         TempData["LastName"] = model.LastName;
         TempData["MiddleName"] = model.MiddleName;
+
+        if (await userManager.Users.AnyAsync(u => u.Email == model.Email))
+        {
+            ModelState.AddModelError("Email", "Email is already taken.");
+            return View(model);
+        }
         TempData["Email"] = model.Email;
 
         // Generate and store code securely
@@ -190,6 +236,7 @@ public class AccountController(UserManager<UserEntity> userManager,
             return RedirectToAction("SignUp1"); // fallback
 
         new SMTPService().SendEmail(model.Email, code, model.FirstName);
+        
         return View("SignUp3", model);
     }
     [HttpPost]
@@ -206,7 +253,7 @@ public class AccountController(UserManager<UserEntity> userManager,
 
         // Carry TempData forward for SignUp4
         TempData.Keep();
-
+        ModelState.Clear();
         return View("SignUp4", model);
     }
     [HttpPost]
@@ -224,7 +271,7 @@ public class AccountController(UserManager<UserEntity> userManager,
         //     return View(model);
         // }
         var user = mapper.Map<UserEntity>(model);
-        user.Image = "/images/users/default.png";
+        user.Image = "default.png";
         user.CreatedUtc = DateTime.UtcNow;
         user.EmailConfirmed = true;
         var res = await userManager.CreateAsync(user, model.Password);
