@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Search_Tests";
+    ViewData["script"] = "Search_Tests.js";
+    ViewData["stylesheet"] = "Search_Tests.css";
+    
+}
+@model List<Quizzy.Data.Entities.Test>
+
+
+    <section class="stats-section">
+    <center><h1>Online tests from QUIZZY</h1></center>
+        
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h2 id="tests-given">0</h2>
+                <p>Tests created by teachers per year</p>
+            </div>
+            <div class="stat-card">
+                <h2 id="tests-completed">0</h2>
+                <p>Tests completed by students per year</p>
+            </div>
+        </div>
+
+        <form class="search-panel" method="get" asp-controller="Home" asp-action="Search">
+
+            <input type="text" name="query" placeholder="Search query..." />
+
+            <select name="subject">
+                <option value="">Choose an item...</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="History">History</option>
+                <option value="Physics">Physics</option>
+                <option value="Ukrainian language">Ukrainian language</option>
+                <option value="Ukrainian literature">Ukrainian literature</option>
+                <option value="Geography">Geography</option>
+                <option value="Chemistry">Chemistry</option>
+            </select>
+
+            <select name="classNumber">
+                <option value="">Class...</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </select>
+
+            <button type="submit" class="find-btn">Search</button>
+        </form>
+    </section>
+
+    @if (Model != null && Model.Any())
+    {
+        <section class="results-section">
+            <center><h2>Found tests:</h2></center>
+            <div class="test-list">
+                @foreach (var test in Model)
+                {
+                    <div class="test-card" method="post" asp-controller="Home" asp-action="Show_Test">
+                        <h3>@test.Name</h3>
+                        <p>@test.Description</p>
+                        <p><strong>Subject:</strong> @test.Subject.Name</p>
+                        <p><strong>Class:</strong>
+                            @(test.GradeId+4)
+                            
+                        </p>
+                        <div class="question-count">@test.QuestionsQuantity</div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+    else if (Model != null)
+    {
+        <p>No tests found.</p>
+    }
+
+

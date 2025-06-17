@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Test";
+    ViewData["stylesheet"] = "Test.css";
+    Layout = "_Layout";
+}
+@model List<Quizzy.Data.Entities.Test>
+
+<body>
+    <div class="testCardWrapper" method="post" asp-controller="Home" asp-action="Show_Test">
+        <div class="testCardHeader">
+            <h3 class="testCardTitle">ваппаивп</h3>
+            <div class="testCardCount">20</div>
+        </div>
+        <p class="testCardDescription">ваппаивп</p>
+        <p class="testCardSubject"><strong>Subject:</strong> ваппаивп</p>
+        <p class="testCardClass"><strong>Class:</strong> 11</p>
+    </div>
+
+    <main>
+        <div class="cardContainer">
+            <div class="cardItem">
+                <img src="https://img.icons8.com/ios-filled/50/home.png" alt="Домашня робота" />
+                <h3>Домашня робота</h3>
+                <button class="btn">Перейти</button>
+            </div>
+
+            <div class="cardItem">
+                <img src="https://img.icons8.com/ios-filled/50/test-passed.png" alt="Тестування" />
+                <h3>Пройти тестування</h3>
+                <button class="btn">Почати</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="questionBlock">
+        <div class="questionHeader">
+            <span class="questionLabel">Запитання 1</span>
+        </div>
+        <div class="questionBody">
+            <p class="questionText">fbdfbdfb</p>
+            <p class="answerTitle">варіанти відповідей</p>
+            <div class="answersGrid">
+                <label><input type="radio" name="q1" disabled /> ff</label>
+                <label><input type="radio" name="q1" disabled /> ff</label>
+                <label><input type="radio" name="q1" disabled /> ff</label>
+                <label><input type="radio" name="q1" disabled /> ff</label>
+            </div>
+        </div>
+    </div>
+</body>
