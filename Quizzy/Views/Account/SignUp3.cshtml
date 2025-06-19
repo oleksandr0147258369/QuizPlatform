@@ -1,10 +1,11 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Quizzy.Models.VerificationViewModel
+@model Quizzy.Models.RegisterViewModel
 @{
     ViewData["Title"] = "Sign up";
     ViewData["stylesheet"] = "Sign_up3.css";
     Layout = "_Layout";
-    string link = $"/Account/signup2?regId={Model.RegId}";
+    ViewData["HasHeader"] = false;
+    ViewData["HasFooter"] = false;
 }
 
 <div class = "main">
@@ -16,19 +17,25 @@
         <p>Enter a verification code we sent to<br/><strong>@Model.Email</strong></p>
     </div>
     <div class="form">
-        <form asp-controller="Account" asp-action="SubmitSignUp3" method="post">
-            <input type="hidden" name="regId" value="@Model.RegId">
-            <input type="text" name="verificationCode" placeholder="Verification Code" required>
+        <form asp-controller="Account" asp-action="SignUp3" method="post">
+            <input type="hidden" name="FirstName" value="@TempData.Peek("FirstName")"/>
+            <input type="hidden" name="MiddleName" value="@TempData.Peek("MiddleName")"/>
+            <input type="hidden" name="LastName" value="@TempData.Peek("LastName")"/>
+            <input type="hidden" name="Email" value="@TempData.Peek("Email")"/>
+            
+            <label asp-for="UsersVerificationCode" for="text">Verification code:</label>
+            <input asp-for="UsersVerificationCode" type="text" id="text" placeholder="Verification Code" required value="">
+            <span asp-validation-for="UsersVerificationCode"></span>
             <div class="submit">
-                <a style="margin-right: 20px;" href=@link>Not your email?<br>Click here!</a>
+                <a style="margin-right: 20px;"  asp-action="SignUp2">Not your email?<br>Click here!</a>
                 <input type="submit" value="Sign Up">
             </div>
-            @if (!string.IsNullOrEmpty(Model.Error))
-            {
-                <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;">
-                    @Model.Error
-                </div>
-            }
+            @* @if (!string.IsNullOrEmpty(Model.Error)) *@
+            @* { *@
+            @*     <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;"> *@
+            @*         @Model.Error *@
+            @*     </div> *@
+            @* } *@
         </form>
     </div>
 </div>

@@ -1,0 +1,120 @@
+@model TestsListViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Search Test";
+    ViewData["stylesheet"] = "Search_Tests.css";
+    ViewData["script"] = "Search_Tests.js";
+}
+
+<div class="main">
+    <div class="first">
+        <section class="stats-section">
+            <h1>Online tests from QUIZZY</h1>
+            <p>Interactive tasks to test knowledge and engage students in learning</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h2 id="tests-given">0</h2>
+                    <p>Tests created by teachers per year</p>
+                </div>
+                <div class="stat-card">
+                    <h2 id="tests-completed">0</h2>
+                    <p>Tests completed by students per year</p>
+                </div>
+            </div>
+
+            <form class="search-panel" method="get" asp-controller="Tests" asp-action="Search">
+                <input type="text" name="query" placeholder="Search query..." />
+
+                <select name="subject">
+                    <option value="">Choose an item...</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="History">History</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Ukrainian language">Ukrainian language</option>
+                    <option value="Ukrainian literature">Ukrainian literature</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Chemistry">Chemistry</option>
+                </select>
+
+                <select name="classNumber">
+                    <option value="">Class...</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                </select>
+
+                <button type="submit" class="find-btn">Search</button>
+            </form>
+        </section>
+
+        <div class="forPhoto">
+            <img src="~/images/home/studying.png" alt="" style="width: 100%; height: auto">
+        </div>
+    </div>
+
+    @if (Model.Show)
+    {
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="search-modal">
+                <div class="search-modal__content">
+                    <div class="search-modal__close-wrapper">
+                        <span class="search-modal__close" onclick="closeModel()">&times;</span>
+                    </div>
+                    <h1>No tests found</h1>
+                </div>
+            </div>
+            <script>
+                window.onload = function () {
+                    const modal = document.querySelector('.search-modal');
+                    modal.style.display = 'flex';
+                };
+            </script>
+        }
+
+        @if (string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="test-results">
+                <h1>All Tests</h1>
+                <div class="test-results__grid">
+                    @foreach (var t in Model.Tests)
+                    {
+                     
+                            <div class="test-results__card">
+                                <h3 class="test-results__title">@t.Name</h3>
+                                <p class="test-results__date">Created: @t.CreatedUtc.ToShortDateString()</p>
+
+                                @if (!string.IsNullOrEmpty(t.Description))
+                                {
+                                    <p class="test-results__description">@t.Description</p>
+                                }
+
+                                <ul class="test-results__details">
+                                    <li>Grade - @(t.GradeId + 4)</li>
+                                    <li>Subject - @t.Subject.Name</li>
+                                    <li>Number of questions - @t.QuestionsQuantity</li>
+                                </ul>
+
+                                <div class="test-results__badges">
+                                    @if (t.IsCopyable)
+                                    {
+                                        <span class="test-badge badge--allowed">Allowed to copy</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="test-badge badge--denied">Not allowed to copy</span>
+                                    }
+                                </div>
+                            </div>
+                        
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

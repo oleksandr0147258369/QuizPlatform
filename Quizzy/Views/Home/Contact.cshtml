@@ -1,22 +1,48 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model VerificationContactModel
 @{
     ViewData["Title"] = "Contact Page";
     ViewData["script"] = "contact.js";
     ViewData["stylesheet"] = "contact.css";
     Layout = "_Layout";
 }
-@Html.Partial("_Header")
 <div class="container" >
     <div class="form">
         <h1>Contact Us</h1>
-        <form action="">
-            <input type="text" placeholder="Name" required>
-            <input type="email" placeholder="Email" required>
-            <textarea placeholder="Message" rows="5" required></textarea>
+        <form asp-controller="Home" asp-action="Contact_Submit" method="post">
+            <input type="text" placeholder="Name" name = "Name" required>
+            <input type="email" placeholder="Email" name = "Email" required>
+            <textarea placeholder="Message" rows="5" name = "Message" required></textarea>
             <button type="submit">Submit</button>
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                <div style="color:#e74c3c; background-color:#fcebea; padding:10px; border:1px solid #e0b4b4; border-radius:4px; font-weight:bold;margin: 20px auto;">
+                    @Model.Error
+                </div>
+            }
         </form>
     </div>
     <div class="container-image">
         <img src="~/images/home/contactUs.png" alt="studying">
     </div>
 </div>
-@Html.Partial("_Footer")
+<div class="model-container">
+    <div class="model-content">
+        <div class = "closing-button">
+            <span class="close-button" onclick="closeModel()">&times;</span>
+        </div>
+
+        <h1>Your Message has been sent successfully</h1>
+    </div>
+</div>
+
+
+@if (Model.IsSuccess)
+{
+    <script>
+        window.onload = function () {
+            const modal = document.querySelector('.model-container');
+            modal.style.display = 'flex';
+        };
+    </script>
+}

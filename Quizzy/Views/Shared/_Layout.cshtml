@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Quizzy.Data.Entities.Identity
+@inject SignInManager<UserEntity> SignInManager
+@inject UserManager<UserEntity> UserManager
+@{
+    ViewData["HasFooter"] ??= true;
+    ViewData["HasHeader"] ??= true;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -9,11 +17,40 @@
     <link rel="stylesheet" href="~/css/@ViewData["stylesheet"]" asp-append-version="true"/>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="~/css/header.css" asp-append-version="true"/>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    
     <script src="~/js/@ViewData["script"]" asp-append-version="true"></script>
-    <link rel="icon" type="image/png" href="~/images/logos/SmallerLogo.png">
+    <link rel="icon" type="image/png" href="~/images/logos/SmallerLogo.png" asp-append-version="true">
 </head>
 <body>
+@if ((bool)ViewData["HasHeader"])
+    {
+        
+    if (User.Identity.IsAuthenticated)
+    {
+        @* <p>autentificated</p> *@
+        try
+        {
+            @await Component.InvokeAsync("Header")
+        }
+        catch (Exception ex)
+        {
+            <p style="color:red;">Header error: @ex.Message</p>
+        }
+    }
+    else
+    {
+        await Html.RenderPartialAsync("_Header");
+    }
+}
 @RenderBody()
+@if ((bool) ViewData["HasFooter"])
+{
+    await Html.RenderPartialAsync("_Footer");
+}
 </body>
 </html>

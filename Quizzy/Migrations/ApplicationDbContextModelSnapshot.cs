@@ -22,6 +22,116 @@ namespace Quizzy.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUserRole<int>");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("Quizzy.Data.Entities.Answer", b =>
                 {
                     b.Property<int>("AnswerId")
@@ -72,6 +182,165 @@ namespace Quizzy.Migrations
                     b.HasKey("GradeId");
 
                     b.ToTable("Grades");
+
+                    b.HasData(
+                        new
+                        {
+                            GradeId = 1,
+                            Number = 5
+                        },
+                        new
+                        {
+                            GradeId = 2,
+                            Number = 6
+                        },
+                        new
+                        {
+                            GradeId = 3,
+                            Number = 7
+                        },
+                        new
+                        {
+                            GradeId = 4,
+                            Number = 8
+                        },
+                        new
+                        {
+                            GradeId = 5,
+                            Number = 9
+                        },
+                        new
+                        {
+                            GradeId = 6,
+                            Number = 10
+                        },
+                        new
+                        {
+                            GradeId = 7,
+                            Number = 11
+                        });
+                });
+
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.RoleEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.UserEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("About")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("SchoolId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Quizzy.Data.Entities.Question", b =>
@@ -182,6 +451,43 @@ namespace Quizzy.Migrations
                     b.HasKey("SubjectId");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            SubjectId = 1,
+                            Name = "Mathematics"
+                        },
+                        new
+                        {
+                            SubjectId = 2,
+                            Name = "History"
+                        },
+                        new
+                        {
+                            SubjectId = 3,
+                            Name = "Physics"
+                        },
+                        new
+                        {
+                            SubjectId = 4,
+                            Name = "Ukrainian language"
+                        },
+                        new
+                        {
+                            SubjectId = 5,
+                            Name = "Ukrainian literature"
+                        },
+                        new
+                        {
+                            SubjectId = 6,
+                            Name = "Geography"
+                        },
+                        new
+                        {
+                            SubjectId = 7,
+                            Name = "Chemistry"
+                        });
                 });
 
             modelBuilder.Entity("Quizzy.Data.Entities.Test", b =>
@@ -309,63 +615,6 @@ namespace Quizzy.Migrations
                     b.ToTable("TestSessions");
                 });
 
-            modelBuilder.Entity("Quizzy.Data.Entities.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("About")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("HasPhoto")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhotoPath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("SchoolId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("SchoolId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("Quizzy.Data.Entities.UserAnswer", b =>
                 {
                     b.Property<int>("UserAnswerId")
@@ -389,6 +638,51 @@ namespace Quizzy.Migrations
                     b.ToTable("UserAnswers");
                 });
 
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.UserRoleEntity", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<int>");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasDiscriminator().HasValue("UserRoleEntity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.Identity.RoleEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Quizzy.Data.Entities.Answer", b =>
                 {
                     b.HasOne("Quizzy.Data.Entities.Question", "Question")
@@ -398,6 +692,15 @@ namespace Quizzy.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.UserEntity", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.School", "School")
+                        .WithMany("Users")
+                        .HasForeignKey("SchoolId");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Quizzy.Data.Entities.Question", b =>
@@ -440,7 +743,7 @@ namespace Quizzy.Migrations
 
             modelBuilder.Entity("Quizzy.Data.Entities.Test", b =>
                 {
-                    b.HasOne("Quizzy.Data.Entities.User", "CreatedBy")
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", "CreatedBy")
                         .WithMany("Tests")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -467,7 +770,7 @@ namespace Quizzy.Migrations
 
             modelBuilder.Entity("Quizzy.Data.Entities.TestHomework", b =>
                 {
-                    b.HasOne("Quizzy.Data.Entities.User", "CreatedBy")
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", "CreatedBy")
                         .WithMany("TestHomeworks")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -494,7 +797,7 @@ namespace Quizzy.Migrations
                         .WithMany()
                         .HasForeignKey("TestId");
 
-                    b.HasOne("Quizzy.Data.Entities.User", "User")
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", "UserEntity")
                         .WithMany("TestSessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -504,16 +807,7 @@ namespace Quizzy.Migrations
 
                     b.Navigation("TestHomework");
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Quizzy.Data.Entities.User", b =>
-                {
-                    b.HasOne("Quizzy.Data.Entities.School", "School")
-                        .WithMany("Users")
-                        .HasForeignKey("SchoolId");
-
-                    b.Navigation("School");
+                    b.Navigation("UserEntity");
                 });
 
             modelBuilder.Entity("Quizzy.Data.Entities.UserAnswer", b =>
@@ -535,11 +829,46 @@ namespace Quizzy.Migrations
                     b.Navigation("TestSession");
                 });
 
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.UserRoleEntity", b =>
+                {
+                    b.HasOne("Quizzy.Data.Entities.Identity.RoleEntity", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quizzy.Data.Entities.Identity.UserEntity", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Quizzy.Data.Entities.Grade", b =>
                 {
                     b.Navigation("Questions");
 
                     b.Navigation("Tests");
+                });
+
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.RoleEntity", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Quizzy.Data.Entities.Identity.UserEntity", b =>
+                {
+                    b.Navigation("TestHomeworks");
+
+                    b.Navigation("TestSessions");
+
+                    b.Navigation("Tests");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Quizzy.Data.Entities.Question", b =>
@@ -567,15 +896,6 @@ namespace Quizzy.Migrations
             modelBuilder.Entity("Quizzy.Data.Entities.TestSession", b =>
                 {
                     b.Navigation("UserAnswers");
-                });
-
-            modelBuilder.Entity("Quizzy.Data.Entities.User", b =>
-                {
-                    b.Navigation("TestHomeworks");
-
-                    b.Navigation("TestSessions");
-
-                    b.Navigation("Tests");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,9 @@
-<footer style="background-color: #9d85df; padding: 40px 0; color: white; text-align: center;width: 100%; padding-top: 0;margin-top: 0; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
+<style>
+    ul li a {
+        color: white;
+    }
+</style>
+<footer style="background-color: #9d85df; padding: 40px; color: white; text-align: center;width: 100%; padding-top: 20px;margin-top: 0; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
     <div style="max-width: 1000px; margin: 0 auto;">
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; text-align: left; padding: 0 20px;">
 
@@ -10,9 +15,21 @@
             <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
                 <h4>Quick Links</h4>
                 <ul style="list-style: none; padding: 0;" class="underlined-list">
-                    <li><a href="/" style="color: white; ">Home</a></li>
-                    <li><a href="/Home/About" style="color: white; ">About</a></li>
-                    <li><a href="/Home/Contact" style="color: white; ">Contact</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/Home/About">About</a></li>
+                        <li><a href="/Home/Contact">Contact</a></li>
+                        <li><a href="#">All tests</a></li>
+                        <li><a href="#">Add new Test</a></li>
+                        <li><a href="/Account/Preferences">My profile</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/" style="color: white; ">Home</a></li>
+                        <li><a href="/Home/About" style="color: white; ">About</a></li>
+                        <li><a href="/Home/Contact" style="color: white; ">Contact</a></li>
+                    }
                 </ul>
             </div>
 

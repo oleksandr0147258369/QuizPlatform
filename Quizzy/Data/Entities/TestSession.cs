@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data.Entities;
 [Table("TestSessions")]
@@ -17,7 +18,7 @@ public class TestSession
     public DateTime? FinishedAt { get; set; }
     
     [ForeignKey("TestId")] public virtual Test? Test { get; set; }
-    [ForeignKey("UserId")] public virtual User User { get; set; }
+    [ForeignKey("UserId")] public virtual UserEntity UserEntity { get; set; }
     [ForeignKey("TestHomeworkId")] public virtual TestHomework TestHomework { get; set; }
     
     public virtual List<UserAnswer> UserAnswers { get; set; }
