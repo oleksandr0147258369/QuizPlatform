@@ -1,0 +1,74 @@
+@model Quizzy.Models.Tests.BuilderViewModel
+
+@{
+    ViewData["Title"] = "Test Builder";
+    Layout = "_Layout";
+    ViewData["HasFooter"] = false;
+    ViewData["HasHeader"] = false;
+    ViewData["stylesheet"] = "tests/builder.css";
+    int totalQuestions = Model.Questions?.Count ?? 0;
+    int totalPoints = Model.Questions?.Sum(q => q.Points) ?? 0;
+}
+
+<div class="builder-container">
+    <h1 class="title">Test Builder</h1>
+
+    <div class="test-summary">
+        <h2>@Model.Name</h2>
+        <p><strong>Visibility:</strong> <span class="visibility">@((Model.IsPrivate ? "Private" : "Public"))</span></p>
+        <p><strong>Total Questions:</strong> @totalQuestions</p>
+        <p><strong>Maximum Score:</strong> @totalPoints points</p>
+
+        <div class="actions">
+            <a asp-controller="Tests" asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test Info</a>
+            <a asp-controller="Tests" asp-action="AddQuestion" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">+ Add New Question</a>
+            <form asp-controller="Tests" asp-action="DeleteTest" asp-route-id="@ViewContext.RouteData.Values["id"]" method="post" onsubmit="return confirm('Are you sure you want to delete this test?');" style="display:inline;">
+                <button type="submit" class="btn danger">🗑 Delete This Test</button>
+            </form>
+            <a asp-controller="Tests" asp-action="MyTests" class="btn secondary">Save and go to My Tests</a>
+        </div>
+    </div>
+
+    <hr />
+
+    @if (Model.Questions != null && Model.Questions.Any())
+    {
+        <div class="questions-list">
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var q = Model.Questions[i];
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-index">Question @(i + 1):</span>
+                        <span class="question-text">@q.Text</span>
+                        <span class="points">@q.Points pt</span>
+                        <span class="type @(q.HasMultipleCorrect ? "multiple" : "single")">
+                            @(q.HasMultipleCorrect ? "Multiple correct answers" : "Single correct answer")
+                        </span>
+                    </div>
+                    <ul class="answers">
+                        @foreach (var ans in q.Answers)
+                        {
+                            <li class="answer-item">
+                                <span>@ans.Text</span>
+                                @if (ans.IsCorrect)
+                                {
+                                    <span class="correct-badge">Correct</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                    <div class="question-actions">
+                        <a asp-route-questionId="@q.Id" asp-action="EditQuestion" asp-controller="Tests" class="btn small primary">Edit</a>
+                        <a asp-route-questionId="@q.Id" asp-action="DuplicateQuestion" asp-controller="Tests" class="btn small secondary">Duplicate</a>
+                        <a asp-route-questionId="@q.Id" asp-route-testId="@ViewContext.RouteData.Values["id"]" asp-action="DeleteQuestion" asp-controller="Tests" class="btn small danger">Delete</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert">No questions added yet.</div>
+    }
+</div>

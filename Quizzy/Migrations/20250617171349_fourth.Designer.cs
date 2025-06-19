@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Quizzy.Data;
@@ -11,9 +12,11 @@ using Quizzy.Data;
 namespace Quizzy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250617171349_fourth")]
+    partial class fourth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,16 +143,26 @@ namespace Quizzy.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AnswerId"));
 
+                    b.Property<bool>("HasPhoto")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HasText")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PhotoPath")
+                        .HasColumnType("text");
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("text");
 
                     b.HasKey("AnswerId");
 
@@ -341,23 +354,34 @@ namespace Quizzy.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("QuestionId"));
 
-                    b.Property<int?>("GradeId")
+                    b.Property<int>("GradeId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("HasMultipleCorrect")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("HasPhoto")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HasText")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PhotoPath")
+                        .HasColumnType("text");
+
                     b.Property<int>("Points")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SubjectId")
+                    b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("QuestionId");
@@ -687,19 +711,27 @@ namespace Quizzy.Migrations
 
             modelBuilder.Entity("Quizzy.Data.Entities.Question", b =>
                 {
-                    b.HasOne("Quizzy.Data.Entities.Grade", null)
+                    b.HasOne("Quizzy.Data.Entities.Grade", "Grade")
                         .WithMany("Questions")
-                        .HasForeignKey("GradeId");
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Quizzy.Data.Entities.Subject", null)
+                    b.HasOne("Quizzy.Data.Entities.Subject", "Subject")
                         .WithMany("Questions")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Quizzy.Data.Entities.Test", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Subject");
 
                     b.Navigation("Test");
                 });
