@@ -318,6 +318,7 @@ public class TestsController(UserManager<UserEntity> userManager,
             Name = test.Name,
             Questions = test.Questions.Select(a => new BuilderQuestionViewModel
             {
+                Id = a.QuestionId,
                 Text = a.Text,
                 HasMultipleCorrect = a.HasMultipleCorrect,
                 Points = a.Points,
@@ -329,5 +330,144 @@ public class TestsController(UserManager<UserEntity> userManager,
             }).ToList()
         };
         return View(model);
+    }
+
+    [HttpGet("Tests/EditQuestion/{questionId}")]
+    public IActionResult EditQuestion(int questionId)
+    {
+        Question question = _db.Questions.Include(q => q.Answers).First(q => q.QuestionId == questionId);
+        if (question.Text == string.Empty)
+        {
+            return RedirectToAction("Builder", "Tests", new { id = question.TestId });
+        }
+
+        var model = new EditQuestionViewModel
+        {
+            TestId = question.TestId,
+            Text = question.Text,
+            Points = question.Points,
+            HasMultipleCorrect = question.HasMultipleCorrect,
+            Answers = question.Answers.Select(an => new AnswerViewModel
+            {
+                IsCorrect = an.IsCorrect,
+                Text = an.Text
+            }).ToList()
+        };
+        if (model.Answers.Count < 8)
+        {
+            model.Answers.AddRange(Enumerable.Range(0, 8 - model.Answers.Count).Select(_ => new AnswerViewModel()));
+        }
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditQuestion(EditQuestionViewModel model)
+    {
+        if (!User.Identity.IsAuthenticated || !User.IsInRole("teacher"))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        if (!ModelState.IsValid)
+        {
+            model.Answers ??= Enumerable.Range(0, 8).Select(_ => new AnswerViewModel()).ToList();
+            return View(model);
+        }
+
+        var filteredAnswers = model.Answers.Where(a => !string.IsNullOrWhiteSpace(a.Text)).ToList();
+        if (filteredAnswers.Count < 2)
+        {
+            ModelState.AddModelError("", "Please provide at least 2 answers.");
+            return View(model);
+        }
+
+        if (!filteredAnswers.Any(a => a.IsCorrect))
+        {
+            ModelState.AddModelError("", "Please provide at least one correct.");
+            return View(model);
+        }
+        var correctAnswersCount = filteredAnswers.Count(a => a.IsCorrect);
+
+        if (!model.HasMultipleCorrect && correctAnswersCount > 1)
+        {
+            ModelState.AddModelError("", "Only one answer can be correct if checkbox is unchecked.");
+            return View(model);
+        }
+        var question = _db.Questions
+            .Include(q => q.Answers)
+            .FirstOrDefault(q => q.QuestionId == model.QuestionId);
+
+        if (question == null)
+        {
+            return NotFound();
+        }
+
+        question.Text = model.Text;
+        question.Points = model.Points;
+        question.HasMultipleCorrect = model.HasMultipleCorrect;
+
+        _db.Answers.RemoveRange(question.Answers);
+
+        question.Answers = filteredAnswers.Select(a => new Answer
+        {
+            Text = a.Text,
+            IsCorrect = a.IsCorrect
+        }).ToList();
+
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction("Builder", "Tests", new { id = question.TestId });
+    }
+
+    [HttpGet("Tests/DeleteQuestion/{questionId}")]
+    public IActionResult DeleteQuestion(int questionId, int testId)
+    {
+        var question = _db.Questions.Include(q => q.Test).FirstOrDefault(q => q.QuestionId == questionId);
+        if (question != null && question.Test.CreatedById.ToString() == userManager.GetUserId(User))
+        {
+            _db.Questions.Remove(question);
+            _db.SaveChanges();
+        }
+        return RedirectToAction("Builder", new { id = testId });
+    }
+    [HttpGet("Tests/DuplicateQuestion/{questionId}")]
+    public IActionResult DuplicateQuestion(int questionId)
+    {
+        var original = _db.Questions.Include(q => q.Answers).FirstOrDefault(q => q.QuestionId == questionId);
+        if (original == null) return RedirectToAction("Builder", new { id = original.TestId });
+
+        var duplicate = new Question
+        {
+            Text = original.Text + " (copy)",
+            HasMultipleCorrect = original.HasMultipleCorrect,
+            Points = original.Points,
+            TestId = original.TestId,
+            Answers = original.Answers.Select(a => new Answer
+            {
+                Text = a.Text,
+                IsCorrect = a.IsCorrect
+            }).ToList()
+        };
+
+        _db.Questions.Add(duplicate);
+        _db.SaveChanges();
+        return RedirectToAction("Builder", new { id = original.TestId });
+    }
+
+    [HttpPost]
+    public IActionResult DeleteTest(int id)
+    {
+        var test = _db.Tests.Include(t => t.Questions).ThenInclude(q => q.Answers).FirstOrDefault(t => t.TestId == id);
+        var userId = int.Parse(userManager.GetUserId(User));
+
+        if (test == null || test.CreatedById != userId)
+        {
+            return RedirectToAction("Builder", new { id });
+        }
+
+        _db.Tests.Remove(test);
+        _db.SaveChanges();
+
+        return RedirectToAction("MyTests");
     }
 }

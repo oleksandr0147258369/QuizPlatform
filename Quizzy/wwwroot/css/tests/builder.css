@@ -160,6 +160,40 @@ hr {
     text-align: center;
 }
 
+.question-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn.small {
+    padding: 5px 10px;
+    font-size: 0.85em;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn.primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn.secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn.danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn.small:hover {
+    opacity: 0.9;
+    text-decoration: none;
+}
+
 /* ✅ RESPONSIVENESS */
 
 @media (max-width: 768px) {

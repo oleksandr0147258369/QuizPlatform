@@ -22,8 +22,10 @@
         <div class="actions">
             <a asp-controller="Tests" asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test Info</a>
             <a asp-controller="Tests" asp-action="AddQuestion" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">+ Add New Question</a>
-            <a asp-controller="Tests" asp-action="DeleteTest">Delete This Test</a>
-            <a asp-controller="Tests" asp-action="MyTests">Save and go to My Tests</a>
+            <form asp-controller="Tests" asp-action="DeleteTest" asp-route-id="@ViewContext.RouteData.Values["id"]" method="post" onsubmit="return confirm('Are you sure you want to delete this test?');" style="display:inline;">
+                <button type="submit" class="btn danger">🗑 Delete This Test</button>
+            </form>
+            <a asp-controller="Tests" asp-action="MyTests" class="btn secondary">Save and go to My Tests</a>
         </div>
     </div>
 
@@ -56,9 +58,11 @@
                             </li>
                         }
                     </ul>
-                    <a asp-action="DeleteQuestion" asp-controller="Tests">Delete</a>
-                    <a asp-action="EditQuestion" asp-controller="Tests">Edit</a>
-                    <a asp-action="Duplicate" asp-controller="Tests">Duplicate</a>
+                    <div class="question-actions">
+                        <a asp-route-questionId="@q.Id" asp-action="EditQuestion" asp-controller="Tests" class="btn small primary">Edit</a>
+                        <a asp-route-questionId="@q.Id" asp-action="DuplicateQuestion" asp-controller="Tests" class="btn small secondary">Duplicate</a>
+                        <a asp-route-questionId="@q.Id" asp-route-testId="@ViewContext.RouteData.Values["id"]" asp-action="DeleteQuestion" asp-controller="Tests" class="btn small danger">Delete</a>
+                    </div>
                 </div>
             }
         </div>
