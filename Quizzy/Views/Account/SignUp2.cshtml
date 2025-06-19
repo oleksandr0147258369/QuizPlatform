@@ -8,6 +8,14 @@
     ViewData["HasFooter"] = false;
 }
 
+<style>
+    .text-danger{
+        color: red;
+        font-weight: bold;
+        font-size: 22px;
+    }
+</style>
+
 <div class = "main">
     <div class="Details">
         <div class = "logo">
@@ -24,7 +32,7 @@
             
             <label asp-for="Email" ></label>
             <input asp-for="Email" />
-            <span asp-validation-for="Email"></span>
+            <span asp-validation-for="Email" class = "text-danger"></span>
             
             <div class="submit">
                 <a style = "margin-right: 20px;" href="/Account/signin">Have an account?<br>Log in!</a>

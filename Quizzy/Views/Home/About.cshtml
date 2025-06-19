@@ -12,9 +12,12 @@
                 <h1>About Us</h1>
                 <p>Quizzy is an educational platform designed to make learning more interactive and fun. We offer tools for creating, sharing, and completing quizzes on any subject. Whether you're a teacher looking to test your students or a learner wanting to challenge yourself, Quizzy provides an easy and effective way to assess knowledge.</p>
             </div>
-            <div class="button">
-                <button onclick="location.href='/Account/signup1'">Get Started</button>
-            </div>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="button">
+                    <button onclick="location.href='/Account/signup1'">Get Started</button>
+                </div>
+            }
         </div>
         <div class="container-image">
             <img src="~/images/home/studying.png" alt="studying">
