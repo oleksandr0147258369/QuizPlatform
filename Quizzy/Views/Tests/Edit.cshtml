@@ -1,0 +1,79 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Quizzy.Constants
+@model Quizzy.Models.Tests.EditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+    ViewData["HasFooter"] = false;
+    ViewData["HasHeader"] = false;
+    ViewData["stylesheet"] = "tests/edit.css";
+}
+
+<h2>Edit Test's Info</h2>
+
+<form asp-controller="Tests" asp-route-id="@Model.TestId" asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" class="validation"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="validation"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Subject"></label>
+        <select asp-for="Subject">
+            <option value="">Choose a subject...</option>
+            @foreach (var s in Subjects.Values)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Grade"></label>
+        <select asp-for="Grade">
+            <option value="">Choose a grade...</option>
+            @for (int i = 5; i <= 11; i++)
+            {
+                <option value="@i">@i - grade</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsPrivate"></label>
+        <div class="radio-group">
+            <label for="private">
+                <input type="radio" asp-for="IsPrivate" id="private" value="true" />
+                Private
+            </label>
+            <label for="public">
+                <input type="radio" asp-for="IsPrivate" id="public" value="false" />
+                Public
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsCopyable"></label>
+        <div class="radio-group">
+            <label for="copyable">
+                <input type="radio" asp-for="IsCopyable" id="copyable" value="true" />
+                Allow to copy
+            </label>
+            <label for="noncopyable">
+                <input type="radio" asp-for="IsCopyable" id="noncopyable" value="false" />
+                Don't allow to copy
+            </label>
+        </div>
+    </div>
+
+    <button type="submit">Save Changes</button>
+</form>

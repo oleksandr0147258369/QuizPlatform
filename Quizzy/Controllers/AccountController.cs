@@ -92,7 +92,8 @@ public class AccountController(UserManager<UserEntity> userManager,
             {
                 await model.Photo.CopyToAsync(fileStream);
             }
-            System.IO.File.Delete(Path.Combine(uploadsFolder, user.Image));
+            if (user.Image != "default.png")
+                System.IO.File.Delete(Path.Combine(uploadsFolder, user.Image));
             user.Image = fileName;
             model.PhotoName = fileName;
         }
@@ -224,7 +225,7 @@ public class AccountController(UserManager<UserEntity> userManager,
         //     return View(model);
         // }
         var user = mapper.Map<UserEntity>(model);
-        user.Image = "/images/users/default.png";
+        user.Image = "default.png";
         user.CreatedUtc = DateTime.UtcNow;
         user.EmailConfirmed = true;
         var res = await userManager.CreateAsync(user, model.Password);

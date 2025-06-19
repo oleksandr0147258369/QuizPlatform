@@ -1,14 +1,14 @@
-@page
 @using Quizzy.Constants
 @model Quizzy.Models.Tests.CreateViewModel
 @{
     ViewData["HasFooter"] = false;
     ViewData["HasHeader"] = false;
+    ViewData["Title"] = "Create";
     ViewData["stylesheet"] = "tests/create.css";
     Layout = "_Layout";
 }
-
-<form asp-controller="Tests" asp-action="Create" method="post">
+<h4 class="page-title">Create Test</h4>
+<form class="form-container" asp-controller="Tests" asp-action="Create" method="post">
     <div>
         <label asp-for="Name"></label>
         <input asp-for="Name"/>
@@ -24,6 +24,17 @@
             }
         </select>
     </div>
+    <div>
+        <label asp-for="Grade"></label>
+        <select asp-for="Grade">
+            <option value="">Choose a grade...</option>
+            @for(int i = 5; i <= 11; i++)
+            {
+                <option value="@i">@i - grade</option>
+            }
+        </select>
+    </div>
+    <button type="submit">Create Test</button>
     @if (!ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger mt-2">

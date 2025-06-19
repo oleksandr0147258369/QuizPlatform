@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Quizzy.Data.Entities.Identity;
 
 namespace Quizzy.Data.Entities;
 [Table("Tests")]
 public class Test
 {
-    [Key] public int TestId { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)] public int TestId { get; set; }
     [Required] public string Name { get; set; }
     public string? Description { get; set; }
     [Required] public int CreatedById { get; set; }
@@ -23,4 +22,5 @@ public class Test
     [ForeignKey("GradeId")] public virtual Grade Grade { get; set; }
     
     public virtual List<Question> Questions { get; set; }
+    public bool IsPublished { get; set; }
 }

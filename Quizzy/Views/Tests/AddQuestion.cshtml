@@ -1,0 +1,50 @@
+@model Quizzy.Models.Tests.AddQuestionViewModel
+
+@{
+    ViewData["Title"] = "Add Question";
+    Layout = "_Layout";
+    ViewData["HasFooter"] = false;
+    ViewData["HasHeader"] = false;
+    ViewData["stylesheet"] = "tests/addQuestion.css";
+}
+
+<h2>Add New Question</h2>
+
+<form asp-action="AddQuestion" method="post" asp-controller="Tests">
+    <input asp-for="TestId" type="hidden"/>
+
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+    <div class="form-group">
+        <label asp-for="Text"></label>
+        <input asp-for="Text" class="form-control" />
+        <span asp-validation-for="Text" class="validation"></span>
+    </div>
+
+    <div class="form-group checkbox">
+        <label>
+            <input asp-for="HasMultipleCorrect" type="checkbox" />
+            Allow multiple correct answers?
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Points"></label>
+        <input asp-for="Points" type="number" value="1" class="form-control" />
+        <span asp-validation-for="Points" class="validation"></span>
+    </div>
+
+    <h4>Answers (fill at least 2)</h4>
+    @for (int i = 0; i < Model.Answers.Count; i++)
+    {
+        <div class="answer-block">
+            <input asp-for="@Model.Answers[i].Text" placeholder="Answer Text" class="form-control"/>
+            <label class="checkbox-inline">
+                <input asp-for="@Model.Answers[i].IsCorrect" type="checkbox" />
+                Correct?
+            </label>
+        </div>
+    }
+
+    <button type="submit">Save Question</button>
+</form>

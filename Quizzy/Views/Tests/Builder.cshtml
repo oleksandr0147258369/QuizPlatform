@@ -1,0 +1,70 @@
+@model Quizzy.Models.Tests.BuilderViewModel
+
+@{
+    ViewData["Title"] = "Test Builder";
+    Layout = "_Layout";
+    ViewData["HasFooter"] = false;
+    ViewData["HasHeader"] = false;
+    ViewData["stylesheet"] = "tests/builder.css";
+    int totalQuestions = Model.Questions?.Count ?? 0;
+    int totalPoints = Model.Questions?.Sum(q => q.Points) ?? 0;
+}
+
+<div class="builder-container">
+    <h1 class="title">Test Builder</h1>
+
+    <div class="test-summary">
+        <h2>@Model.Name</h2>
+        <p><strong>Visibility:</strong> <span class="visibility">@((Model.IsPrivate ? "Private" : "Public"))</span></p>
+        <p><strong>Total Questions:</strong> @totalQuestions</p>
+        <p><strong>Maximum Score:</strong> @totalPoints points</p>
+
+        <div class="actions">
+            <a asp-controller="Tests" asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test Info</a>
+            <a asp-controller="Tests" asp-action="AddQuestion" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">+ Add New Question</a>
+            <a asp-controller="Tests" asp-action="DeleteTest">Delete This Test</a>
+            <a asp-controller="Tests" asp-action="MyTests">Save and go to My Tests</a>
+        </div>
+    </div>
+
+    <hr />
+
+    @if (Model.Questions != null && Model.Questions.Any())
+    {
+        <div class="questions-list">
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var q = Model.Questions[i];
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-index">Question @(i + 1):</span>
+                        <span class="question-text">@q.Text</span>
+                        <span class="points">@q.Points pt</span>
+                        <span class="type @(q.HasMultipleCorrect ? "multiple" : "single")">
+                            @(q.HasMultipleCorrect ? "Multiple correct answers" : "Single correct answer")
+                        </span>
+                    </div>
+                    <ul class="answers">
+                        @foreach (var ans in q.Answers)
+                        {
+                            <li class="answer-item">
+                                <span>@ans.Text</span>
+                                @if (ans.IsCorrect)
+                                {
+                                    <span class="correct-badge">Correct</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                    <a asp-action="DeleteQuestion" asp-controller="Tests">Delete</a>
+                    <a asp-action="EditQuestion" asp-controller="Tests">Edit</a>
+                    <a asp-action="Duplicate" asp-controller="Tests">Duplicate</a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert">No questions added yet.</div>
+    }
+</div>
