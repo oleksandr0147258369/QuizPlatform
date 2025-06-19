@@ -33,4 +33,7 @@ public class PreferencesViewModel
     [Display(Name = "Confirm Password")]
     [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
     public string? ConfirmPassword { get; set; }
+    
+    
+    public bool second_error { get; set; }
 }

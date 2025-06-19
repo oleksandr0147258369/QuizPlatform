@@ -7,6 +7,13 @@
     ViewData["HasHeader"] = false;
     ViewData["HasFooter"] = false;
 }
+<style>
+    .text-danger{
+        color: red;
+        font-weight: bold;
+        font-size: 22px;
+    }
+</style>
 
 <div class = "main">
     <div class="Details">
@@ -25,7 +32,7 @@
             
             <label asp-for="UsersVerificationCode" for="text">Verification code:</label>
             <input asp-for="UsersVerificationCode" type="text" id="text" placeholder="Verification Code" required value="">
-            <span asp-validation-for="UsersVerificationCode"></span>
+            <span asp-validation-for="UsersVerificationCode" class = "text-danger"></span>
             <div class="submit">
                 <a style="margin-right: 20px;"  asp-action="SignUp2">Not your email?<br>Click here!</a>
                 <input type="submit" value="Sign Up">

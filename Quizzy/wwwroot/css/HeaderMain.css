@@ -103,6 +103,9 @@ header{
 .Login img{
     width: 50px;
     height: 50px;
+
+    object-fit: cover;
+    
     border-radius: 50%;
     margin: 0 10px;
     margin-left: 20px;
@@ -156,6 +159,7 @@ header{
 }
 .UserMenu.active{
     display: block;
+    right: 20px;
 }
 .UserMenu ul{
     padding: 0;
@@ -228,6 +232,7 @@ header{
         height: auto;
         top: 100px;
         left: 50%;
+        
 
         transform: translateX(-50%);
         z-index: 100;
