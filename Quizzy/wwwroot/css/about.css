@@ -1,7 +1,6 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
 }
 
 /* Use border-box sizing for predictable layout */
@@ -62,10 +61,7 @@ body{
 
 
 
-.first-section #first-section-text{
-    display: gird;
-    grid-template-rows: 3fr 1fr 2fr;
-}
+
 .first-section #first-section-text .img_checked{
    width: 100%;
    display: flex;
