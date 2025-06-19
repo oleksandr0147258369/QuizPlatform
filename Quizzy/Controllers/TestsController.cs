@@ -25,7 +25,11 @@ public class TestsController(UserManager<UserEntity> userManager,
         };
         return View(model);
     }
-
+    public IActionResult CreateHomework()
+    {
+        
+        return View();
+    }
 
     [HttpGet]
 
@@ -493,5 +497,42 @@ public class TestsController(UserManager<UserEntity> userManager,
         }).ToList();
         return View(model);
     }
+
+
     
+    [HttpPost]
+    public async Task<IActionResult> AssignHomework(AssignHomeworkViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model); // або поверни з помилками
+        }
+
+        var userIdString = userManager.GetUserId(User);
+        if (!int.TryParse(userIdString, out int createdById))
+        {
+            return Unauthorized();
+        }
+
+        // Об’єднання дати і часу дедлайну
+        var localDeadline = model.DeadlineDate.Date + model.DeadlineTime;
+        var deadlineUtc = DateTime.SpecifyKind(localDeadline, DateTimeKind.Local).ToUniversalTime();
+
+        var homework = new TestHomework
+        {
+            CreatedById = createdById,
+            TestId = 3,
+            CreatedUtc = DateTime.UtcNow,
+            HasDeadline = true,
+            Deadline = deadlineUtc,
+            HasTimeToComplete = model.LimitTime,
+            TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
+                ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
+                : null
+        };
+
+        _db.TestHomeworks.Add(homework);
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Home"); 
+    }
 }
