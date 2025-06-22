@@ -1,0 +1,202 @@
+﻿body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.testCardWrapper {
+    position: relative;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px 50px;
+    max-width: 1000px;
+    margin: 30px auto;
+    font-family: 'Segoe UI', sans-serif;
+    border-left: 8px solid #2d5ec1;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.testCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.testCardTitle {
+    margin: 0;
+    font-size: 26px;
+    color: #2d3e50;
+}
+
+.testCardCount {
+    font-size: 36px;
+    font-weight: bold;
+    color: #e0e0e0;
+}
+
+.testCardDescription,
+.testCardSubject,
+.testCardClass {
+    font-size: 17px;
+    color: #444;
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 50px auto;
+    max-width: 900px;
+    flex-wrap: wrap;
+}
+
+.cardItem {
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 250px;
+    transition: transform 0.3s ease;
+}
+
+    .cardItem:hover {
+        transform: translateY(-5px);
+    }
+
+    .cardItem img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 15px;
+    }
+
+    .cardItem h3 {
+        margin-bottom: 15px;
+    }
+
+.btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .btn:hover {
+        background-color: #357ab7;
+    }
+
+.questionBlock {
+    background: #fff;
+    border-radius: 18px;
+    border-left: 8px solid #2d5ec1;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    padding: 20px 30px;
+    margin: 30px auto;
+    max-width: 900px;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.questionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.questionLabel {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 4px 10px;
+    background: #f4f4f4;
+    border-radius: 6px;
+    color: #2d5ec1;
+}
+
+.questionText {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.answerTitle {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+    display: inline-block;
+    background: #f0f1fc;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.answersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px 20px;
+}
+
+    .answersGrid label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #222;
+        opacity: 0.6;
+    }
+
+    .answersGrid input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #2d5ec1;
+        cursor: not-allowed;
+    }
+
+@media (max-width: 992px) {
+    .testCardWrapper {
+        padding: 25px 30px;
+    }
+
+    .testCardTitle {
+        font-size: 22px;
+    }
+
+    .testCardCount {
+        font-size: 30px;
+    }
+
+    .testCardDescription,
+    .testCardSubject,
+    .testCardClass {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .questionBlock {
+        padding: 16px 20px;
+        min-height: auto;
+    }
+
+    .questionLabel,
+    .answerTitle,
+    .answersGrid label {
+        font-size: 12px;
+    }
+
+    .questionText {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["stylesheet"] = "tests/CreateHomework.css";
+}
+<body>
+    <div class="homework-wrapper">
+        <h2>Assign Homework</h2>
+        <form method="post" asp-controller="Tests" asp-action="AssignHomework">
+
+            <label for="test-name">Test Title</label>
+            <input type="text" id="test-name" name="TestName" placeholder="e.g. Test 1: ..." required />
+
+            <label for="deadline-date">Deadline Date</label>
+            <select id="deadline-date" name="DeadlineDate" required>
+                @for (int i = 0; i < 10; i++)
+                {
+                    var day = DateTime.Now.AddDays(i);
+                    <option value="@day.ToString("yyyy-MM-dd")">@day.ToString("dd MMMM", new System.Globalization.CultureInfo("en-US"))</option>
+                }
+            </select>
+
+            <label for="deadline-time">Deadline Time</label>
+            <input type="time" id="deadline-time" name="DeadlineTime" value="17:00" required />
+
+            <div class="settings-option">
+                <span>Limit time for test completion</span>
+
+                
+
+                <!-- Видимий чекбокс для true -->
+                <label class="toggle-switch">
+                    <input type="checkbox" id="limit-time" name="LimitTime" value="true" onchange="toggleTimeLimitInput()" />
+                    <span class="slider"></span>
+                </label>
+
+                <input type="number" id="time-limit-minutes" name="TimeLimitMinutes" class="minutes-input" placeholder="Minutes" min="1" style="display:none;" />
+            </div>
+
+            <button type="submit" class="homework-submit-btn">Assign</button>
+        </form>
+
+        
+
+    </div>
+
+    <script>
+        function toggleTimeLimitInput() {
+            const checkbox = document.getElementById('limit-time');
+            const input = document.getElementById('time-limit-minutes');
+            if (checkbox.checked) {
+                input.style.display = 'inline-block';
+                input.required = true;
+            } else {
+                input.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+    </script>
+</body>
