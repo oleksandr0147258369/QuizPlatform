@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Quizzy.Data;
 using Quizzy.Data.Entities;
@@ -25,10 +23,14 @@ public class TestsController(UserManager<UserEntity> userManager,
         };
         return View(model);
     }
-    public IActionResult CreateHomework()
+    [HttpGet("Tests/CreateHomework/{id}")]
+    public IActionResult CreateHomework(int id)
     {
-        
-        return View();
+        var model = new AssignHomeworkViewModel()
+        {
+            TestId = id
+        };
+        return View(model);
     }
 
     [HttpGet]
@@ -554,14 +556,14 @@ public class TestsController(UserManager<UserEntity> userManager,
         return View(model);
     }
 
-
     
-    [HttpPost]
-    public async Task<IActionResult> AssignHomework(AssignHomeworkViewModel model)
+    [HttpPost("Tests/AssignHomework/{id}")]
+    public async Task<IActionResult> AssignHomework(AssignHomeworkViewModel model, int id)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            model.TestId = id;
+            return View("CreateHomework", model);
         }
 
         var userIdString = userManager.GetUserId(User);
@@ -576,7 +578,7 @@ public class TestsController(UserManager<UserEntity> userManager,
         var homework = new TestHomework
         {
             CreatedById = createdById,
-            TestId = 3,
+            TestId = id,
             CreatedUtc = DateTime.UtcNow,
             HasDeadline = true,
             Deadline = deadlineUtc,

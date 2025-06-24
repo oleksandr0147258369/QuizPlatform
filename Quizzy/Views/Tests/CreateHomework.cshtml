@@ -1,10 +1,11 @@
-﻿@{
+﻿@model AssignHomeworkViewModel
+@{
     ViewData["stylesheet"] = "tests/CreateHomework.css";
 }
 <body>
     <div class="homework-wrapper">
         <h2>Assign Homework</h2>
-        <form method="post" asp-controller="Tests" asp-action="AssignHomework">
+        <form method="post" asp-controller="Tests" asp-route-id="@Model.TestId" asp-action="AssignHomework">
 
             <label for="test-name">Test Title</label>
             <input type="text" id="test-name" name="TestName" placeholder="e.g. Test 1: ..." required />
