@@ -7,12 +7,21 @@
     --success: #2ecc71;
     --border: #cccccc;
 }
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Use border-box sizing for predictable layout */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 body {
     background-color: var(--background);
     color: var(--text);
     font-family: Arial, sans-serif;
-    padding: 1rem;
+    padding: 0;
     margin: 0;
 }
 
@@ -20,7 +29,7 @@ body {
     max-width: 1000px;
     margin: auto;
     padding: 1rem;
-    min-height: 100vh;
+    min-height: calc(100vh - 100px);
 }
 
 .title {
