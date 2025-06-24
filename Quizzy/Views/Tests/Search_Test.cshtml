@@ -1,14 +1,14 @@
 @model TestsListViewModel
 @{
-   
     Layout = "_Layout";
     ViewData["Title"] = "Search Test";
     ViewData["stylesheet"] = "tests/Search_Tests.css";
     ViewData["script"] = "Search_Tests.js";
 }
-<div class = "main">
-    <div class = "first">
-        <section class="stats-section" >
+
+<div class="main">
+    <div class="first">
+        <section class="stats-section">
             <h1>Online tests from QUIZZY</h1>
             <p>Interactive tasks to test knowledge and engage students in learning</p>
 
@@ -23,21 +23,21 @@
                 </div>
             </div>
 
-            <form class="search-panel" method="post" asp-controller="Tests" asp-action="Search">
+            <form class="search-panel" method="get" asp-controller="Tests" asp-action="Search">
                 <input type="text" name="query" placeholder="Search query..." />
 
                 <select name="subject">
                     <option value="">Choose an item...</option>
-                    <option value="mathematics">Mathematics</option>
-                    <option value="history">History</option>
-                    <option value="physics">Physics</option>
-                    <option value="ukrainian_language">Ukrainian language</option>
-                    <option value="ukrainian_literature">Ukrainian literature</option>
-                    <option value="geography">Geography</option>
-                    <option value="chemistry">Chemistry</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="History">History</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Ukrainian language">Ukrainian language</option>
+                    <option value="Ukrainian literature">Ukrainian literature</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Chemistry">Chemistry</option>
                 </select>
 
-                <select name="class">
+                <select name="classNumber">
                     <option value="">Class...</option>
                     <option value="5">5</option>
                     <option value="6">6</option>
@@ -51,29 +51,27 @@
                 <button type="submit" class="find-btn">Search</button>
             </form>
         </section>
-        <div class = "forPhoto" >
-            <img src="~/images/home/studying.png" alt="" style = "width: 100%;height: auto">
+
+        <div class="forPhoto">
+            <img src="~/images/home/studying.png" alt="" style="width: 100%; height: auto">
         </div>
     </div>
-    
+
     @if (Model.Show)
     {
-
         @if (!string.IsNullOrEmpty(Model.Error))
         {
-            
-            <div class="model-container">
-                <div class="model-content">
-                    <div class = "closing-button">
-                        <span class="close-button" onclick="closeModel()">&times;</span>
+            <div class="search-modal">
+                <div class="search-modal__content">
+                    <div class="search-modal__close-wrapper">
+                        <span class="search-modal__close" onclick="closeModel()">&times;</span>
                     </div>
-
                     <h1>No tests found</h1>
                 </div>
             </div>
             <script>
                 window.onload = function () {
-                    const modal = document.querySelector('.model-container');
+                    const modal = document.querySelector('.search-modal');
                     modal.style.display = 'flex';
                 };
             </script>
@@ -81,56 +79,42 @@
 
         @if (string.IsNullOrEmpty(Model.Error))
         {
-            <div class="second">
+            <div class="test-results">
                 <h1>All Tests</h1>
-                @foreach (var t in Model.Tests)
-                {
-                    <div class="tests-grid">
-                        <div class="test-card">
-                            <h3 class="test-title">@t.Name</h3>
-                            <p class="test-date">Created: @t.CreatedUtc.ToShortDateString()</p>
-                            @if (!string.IsNullOrEmpty(t.Description))
-                            {
-                                <p class="test-description">@t.Description</p>
-                            }
+                <div class="test-results__grid">
+                    @foreach (var t in Model.Tests)
+                    {
+                     
+                            <div class="test-results__card">
+                                <h3 class="test-results__title">@t.Name</h3>
+                                <p class="test-results__date">Created: @t.CreatedUtc.ToShortDateString()</p>
 
-                            <ul class="test-info">
-                                <li>Grade - @t.Grade</li>
-                                <li>Subject - @t.Subject</li>
-                                <li>Number of questions - @t.QuestionsQuantity</li>
-                            </ul>
-
-                            <div class="test-badges">
-                                @if (t.IsCopyable)
+                                @if (!string.IsNullOrEmpty(t.Description))
                                 {
-                                    <span class="badge copyable">Allowed to copy</span>
-                                }
-                                @if (!t.IsCopyable)
-                                {
-                                    <span class="badge private">Not allowed to copy</span>
+                                    <p class="test-results__description">@t.Description</p>
                                 }
 
+                                <ul class="test-results__details">
+                                    <li>Grade - @(t.GradeId + 4)</li>
+                                    <li>Subject - @t.Subject.Name</li>
+                                    <li>Number of questions - @t.QuestionsQuantity</li>
+                                </ul>
 
+                                <div class="test-results__badges">
+                                    @if (t.IsCopyable)
+                                    {
+                                        <span class="test-badge badge--allowed">Allowed to copy</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="test-badge badge--denied">Not allowed to copy</span>
+                                    }
+                                </div>
                             </div>
-                        </div>
-
-                    </div>
-                }
+                        
+                    }
+                </div>
             </div>
         }
     }
-
-
-
-    @* <div class = "pagination"> *@
-    @*     @if (Model.TotalPages > 1) *@
-    @*     { *@
-    @*         @for (int i = 1; i <= Model.TotalPages; i++) *@
-    @*         { *@
-    @*             <li class="page-item @(i == Model.CurrentPage ? "active" : "")"> *@
-    @*                 <a class="page-link" asp-action="" asp-route-page="@i">@i</a> *@
-    @*             </li> *@
-    @*         } *@
-    @*     } *@
-    @* </div> *@
 </div>

@@ -18,7 +18,7 @@ public class AccountController(UserManager<UserEntity> userManager,
     SignInManager<UserEntity> signInManager,
     IMapper mapper, ApplicationDbContext db) : Controller
 {
-    
+
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -44,7 +44,7 @@ public class AccountController(UserManager<UserEntity> userManager,
     {
         if (!ModelState.IsValid)
         {
-            
+
             model.Schools = db.Schools.Select(s => s.Name).ToList();
             return View(model);
         }
@@ -146,7 +146,7 @@ public class AccountController(UserManager<UserEntity> userManager,
     [HttpPost]
     public async Task<IActionResult> LogIn(LogInViewModel model)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return View(model);
         var user = await userManager.FindByEmailAsync(model.Email);
         if (user != null)
@@ -161,7 +161,7 @@ public class AccountController(UserManager<UserEntity> userManager,
         ModelState.AddModelError("Password", "Invalid login attempt.");
         return View(model);
     }
-    
+
     [HttpGet]
     public IActionResult SignUp1()
     {
@@ -257,7 +257,7 @@ public class AccountController(UserManager<UserEntity> userManager,
         return View("SignUp4", model);
     }
     [HttpPost]
-    public  async Task<IActionResult> SignUp4(RegisterViewModel model)
+    public async Task<IActionResult> SignUp4(RegisterViewModel model)
     {
         // if (!ModelState.IsValid)
         // {
@@ -302,22 +302,22 @@ public class AccountController(UserManager<UserEntity> userManager,
         Console.WriteLine("Errors");
         return View(model);
     }
-    
-   static string GenerateRandomCode(int length)
-   {
-       const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-       var random = new Random();
-       var result = new char[length];
 
-       for (int i = 0; i < length; i++)
-       {
-           result[i] = chars[random.Next(chars.Length)];
-       }
+    static string GenerateRandomCode(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var random = new Random();
+        var result = new char[length];
 
-       return new string(result);
-   }
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = chars[random.Next(chars.Length)];
+        }
 
-   [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        return new string(result);
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
