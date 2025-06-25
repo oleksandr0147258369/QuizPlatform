@@ -19,8 +19,7 @@ public class HeaderViewComponent : ViewComponent
         return View("~/Views/Shared/Components/Header/Default.cshtml", new HeaderViewModel
         {
             UserName = user.FirstName + " " + user.LastName,
-            Image = user.Image,
-            Roles = _userManager.GetRolesAsync(user).Result.ToList()
+            Image = user.Image
         });
     }
 }
@@ -29,5 +28,4 @@ public class HeaderViewModel
 {
     public string UserName { get; set; }
     public string Image { get; set; }
-    public List<string> Roles { get; set; }
 }

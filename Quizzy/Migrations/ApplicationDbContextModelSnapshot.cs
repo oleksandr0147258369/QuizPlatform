@@ -391,6 +391,9 @@ namespace Quizzy.Migrations
                     b.Property<TimeSpan>("TimeSpent")
                         .HasColumnType("interval");
 
+                    b.Property<int>("TotalPoints")
+                        .HasColumnType("integer");
+
                     b.HasKey("ResultId");
 
                     b.HasIndex("TestSessionId");
@@ -573,6 +576,10 @@ namespace Quizzy.Migrations
 
                     b.Property<bool>("IsTestHomework")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("timestamp with time zone");
