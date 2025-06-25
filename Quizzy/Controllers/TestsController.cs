@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Quizzy.Data;
 using Quizzy.Data.Entities;
@@ -25,14 +23,22 @@ public class TestsController(UserManager<UserEntity> userManager,
         };
         return View(model);
     }
-    
-   
+    [HttpGet("Tests/CreateHomework/{id}")]
+    public IActionResult CreateHomework(int id)
+    {
+        var model = new AssignHomeworkViewModel()
+        {
+            TestId = id
+        };
+        return View(model);
+    }
 
-    [HttpPost]
+    [HttpGet]
 
     public async Task<IActionResult> Search(string query, string subject, int? classNumber)
     {
-        int pageSize = 20;
+
+        //Console.WriteLine($"Value: {classNumber}");
 
         IQueryable<Test> results = _db.Tests
             .Include(t => t.Subject)
@@ -472,6 +478,25 @@ public class TestsController(UserManager<UserEntity> userManager,
         return RedirectToAction("MyTests");
     }
 
+    [HttpGet("Tests/Publish/{id}")]
+    public IActionResult Publish(int id)
+    {
+        var test = _db.Tests.Include(t => t.Questions).FirstOrDefault(t => t.TestId == id);
+        var userId = int.Parse(userManager.GetUserId(User));
+        if (test == null || test.CreatedById != userId)
+        {
+            return RedirectToAction("Create");
+        }
+
+        if (!test.IsPublished)
+        {
+            test.IsPublished = true;
+            _db.Tests.Update(test);
+            _db.SaveChanges();
+        }
+        return RedirectToAction("MyTests");
+    }
+
     [HttpGet]
     public IActionResult MyTests()
     {
@@ -483,18 +508,88 @@ public class TestsController(UserManager<UserEntity> userManager,
         }
 
         var userTests = _db.Tests.Where(t => t.CreatedById == user.Id).ToList();
-        var model = userTests.Select(t => new MyTestViewModel
+        var model = new MyTestsViewModel
         {
-            Name = t.Name,
-            QuestionsCount = t.QuestionsQuantity,
-            TestId = t.TestId,
-            CreatedBy = user,
-            CreatedUtc = t.CreatedUtc
-        }).ToList();
+            Tests = userTests.Select(t => new MyTestViewModel
+            {
+                Name = t.Name,
+                QuestionsCount = _db.Questions.Count(q => q.TestId == t.TestId),
+                TestId = t.TestId,
+                CreatedBy = user,
+                CreatedUtc = t.CreatedUtc,
+                IsPublished = t.IsPublished
+            }).ToList()
+        };
         return View(model);
     }
 
+    [HttpGet("Tests/Preview/{id}")]
+    public IActionResult Preview(int id)
+    {
+        var userId = int.Parse(userManager.GetUserId(User));
+        var test = _db.Tests.Include(t => t.Questions).ThenInclude(q => q.Answers).FirstOrDefault(t => t.TestId == id);
+        if (test == null)
+            return RedirectToAction("MyTests");
+        if (test.CreatedById != userId && test.IsPrivate)
+        {
+            return RedirectToAction("MyTests");
+        }
+        var model = new PreviewViewModel
+        {
+            Name = test.Name,
+            QuestionsCount = test.QuestionsQuantity,
+            TestId = test.TestId,
+            CreatedBy = _db.Users.FirstOrDefault(u => u.Id == test.CreatedById),
+            CreatedUtc = test.CreatedUtc,
+            Questions = test.Questions.Select(a => new PreviewQuestionViewModel()
+            {
+                Text = a.Text,
+                HasMultipleCorrect = a.HasMultipleCorrect,
+                Points = a.Points,
+                Answers = a.Answers.Select(an => new AnswerViewModel
+                {
+                    IsCorrect = an.IsCorrect,
+                    Text = an.Text
+                }).ToList()
+            }).ToList()
+        };
+        return View(model);
+    }
 
+    
+    [HttpPost("Tests/AssignHomework/{id}")]
+    public async Task<IActionResult> AssignHomework(AssignHomeworkViewModel model, int id)
+    {
+        if (!ModelState.IsValid)
+        {
+            model.TestId = id;
+            return View("CreateHomework", model);
+        }
 
+        var userIdString = userManager.GetUserId(User);
+        if (!int.TryParse(userIdString, out int createdById))
+        {
+            return Unauthorized();
+        }
 
-   }
+        var localDeadline = model.DeadlineDate.Date + model.DeadlineTime;
+        var deadlineUtc = DateTime.SpecifyKind(localDeadline, DateTimeKind.Local).ToUniversalTime();
+
+        var homework = new TestHomework
+        {
+            CreatedById = createdById,
+            TestId = id,
+            CreatedUtc = DateTime.UtcNow,
+            HasDeadline = true,
+            Deadline = deadlineUtc,
+            HasTimeToComplete = model.LimitTime,
+            TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
+                ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
+                : null
+        };
+
+        _db.TestHomeworks.Add(homework);
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Index", "Home"); 
+    }
+}
