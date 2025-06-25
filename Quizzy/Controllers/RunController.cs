@@ -167,11 +167,6 @@ public class RunController(UserManager<UserEntity> userManager,
                 SessionId = SessionID
             };
 
-            if (Questions.Count == 0)
-            {
-                return BadRequest("No questions found.");
-            }
-
             return View("TestRun", model);
             // }
         }
