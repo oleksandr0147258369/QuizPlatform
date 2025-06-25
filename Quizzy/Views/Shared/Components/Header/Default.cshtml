@@ -8,23 +8,33 @@
     <div class="logo">
         <img src="~/images/logos/Logo1.png" alt="logo">
     </div>
-    
+
     <div class="menu-container">
         <div class="menu">
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/Home/About">About</a></li>
                 <li><a href="/Home/Contact">Contact</a></li>
-                <li><a href="/Tests/Search_Test">All tests</a></li>
-                <li><a href="/Tests/Create">Add new Test</a></li>
-                <li><a href="/Run/Code">Join Test</a></li>
+                @if (User.IsInRole("teacher"))
+                {
+                    <li><a href="/Tests/Search_Test">All tests</a></li>
+                    <li><a href="/Tests/Create">Add new Test</a></li>
+                    <li><a href="/Run/Code">Join Test</a></li>
+
+                }
+                else
+                {
+                    <li><a href="#">Start Homework</a></li>
+                }
+
+
             </ul>
         </div>
         <div class="Login" onclick="toggleIcon()">
-            <p class = "name">@Model.UserName</p>
+            <p class="name">@Model.UserName</p>
             <img src="~/images/users/@Model.Image" alt="user image">
             <div class="triangle"></div>
-                
+
         </div>
         <div class="UserMenu">
             <ul>
@@ -32,23 +42,24 @@
                 <div class="stick"></div>
                 <li><a href="/Tests/MyTests">My tests</a></li>
                 <li><a href="/Account/Preferences">Settings</a></li>
+                <li><a href="/Tests/MyHomework">My Homework</a></li>
                 <div class="stick"></div>
                 <li>
                     <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
                         <button class="header-button" type="submit">Logout</button>
                     </form>
                 </li>
-                    
+
             </ul>
-                
-                
+
+
 
         </div>
     </div>
-    <div class="burger" onclick="toggleMenu()" >
+    <div class="burger" onclick="toggleMenu()">
         <div></div>
         <div></div>
     </div>
-    
-        
+
+
 </header>

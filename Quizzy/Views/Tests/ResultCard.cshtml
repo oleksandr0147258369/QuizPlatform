@@ -1,0 +1,18 @@
+﻿@model Quizzy.Models.Tests.ResultCardViewModel
+@{
+	Layout = "_Layout";
+	ViewData["stylesheet"] = "tests/resultcard.css";
+}
+
+<div class="result-card">
+	<h3 class="full-name">@Model.FullName</h3>
+
+	<div class="progress-bar">
+		<div class="progress" style="width:@Model.SuccessPercentage%"></div>
+	</div>
+
+	<p><strong>Бали:</strong> @Model.Points / @Model.TotalPoints</p>
+	<p><strong>Відсоток успіху:</strong> @Model.SuccessPercentage %</p>
+	<p><strong>Час на тест:</strong> @Model.TimeSpent.ToString(@"hh\:mm\:ss")</p>
+	<p><strong>Час на питання:</strong> @Model.TimePerQuestion.ToString(@"hh\:mm\:ss")</p>
+</div>
