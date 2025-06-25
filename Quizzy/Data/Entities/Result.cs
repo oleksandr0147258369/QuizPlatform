@@ -8,6 +8,8 @@ public class Result
     [Key] public int ResultId { get; set; }
     [Required] public int TestSessionId { get; set; }
     [Required] public int Points { get; set; }
+    
+    [Required] public int TotalPoints { get; set; }
     [Required] public TimeSpan TimeSpent { get; set; }
     [Required] public TimeSpan TimePerQuestion { get; set; }
     

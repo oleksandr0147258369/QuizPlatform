@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quizzy.Data;
+using Quizzy.Data.Entities;
 using Quizzy.Data.Entities.Identity;
 using Quizzy.Interfaces;
 using Quizzy.Services;
@@ -44,18 +45,96 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseStaticFiles(); // <-- required to serve wwwroot content like images
-
+        app.UseStaticFiles();
         app.UseRouting();
-
-        app.UseAuthentication(); // <-- MUST come before authorization
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         
-        await app.SeedData();
+        // using (var scope = app.Services.CreateScope())
+        // {
+        //     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        //     await SeedSampleTest(dbContext); 
+        // }
         app.Run();
     }
+
+    
+   public static async Task SeedSampleTest(ApplicationDbContext _db)
+{
+    if (_db.Tests.Any(t => t.Name == "Sample Test"))
+    {
+        _db.Tests.RemoveRange(_db.Tests);
+    }
+
+    var test = new Test
+    {
+        Name = "Sample Test",
+        Description = "A small test for demo purposes",
+        CreatedById = 5,  // ❗ Упевнись, що User з ID 5 існує
+        CreatedUtc = DateTime.UtcNow,
+        SubjectId = 1,    // ❗ Перевір, що Subject з ID 1 існує
+        GradeId = 1,      // ❗ Перевір, що Grade з ID 1 існує
+        IsPrivate = false,
+        IsCopyable = false,
+        IsPublished = true,
+        QuestionsQuantity = 3,
+        Questions = new List<Question>() // 🟢 ВАЖЛИВО!
+    };
+
+    var questions = new List<Question>
+    {
+        new Question
+        {
+            Text = "Якого кольору небо?",
+            HasMultipleCorrect = false,
+            Points = 1,
+            Answers = new List<Answer>
+            {
+                new Answer { Text = "Синій", IsCorrect = true },
+                new Answer { Text = "Червоний", IsCorrect = false },
+                new Answer { Text = "Жовтий", IsCorrect = false }
+            }
+        },
+        new Question
+        {
+            Text = "Вибери всі парні числа:",
+            HasMultipleCorrect = true,
+            Points = 2,
+            Answers = new List<Answer>
+            {
+                new Answer { Text = "1", IsCorrect = false },
+                new Answer { Text = "2", IsCorrect = true },
+                new Answer { Text = "3", IsCorrect = false },
+                new Answer { Text = "4", IsCorrect = true }
+            }
+        },
+        new Question
+        {
+            Text = "Столиця Франції?",
+            HasMultipleCorrect = false,
+            Points = 1,
+            Answers = new List<Answer>
+            {
+                new Answer { Text = "Лондон", IsCorrect = false },
+                new Answer { Text = "Париж", IsCorrect = true },
+                new Answer { Text = "Берлін", IsCorrect = false }
+            }
+        }
+    };
+
+    // Додаємо питання до тесту
+    foreach (var question in questions)
+    {
+        test.Questions.Add(question);
+    }
+
+    _db.Tests.Add(test);
+    await _db.SaveChangesAsync();
+}
+
+
 }
