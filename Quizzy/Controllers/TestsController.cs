@@ -25,7 +25,8 @@ public class TestsController(UserManager<UserEntity> userManager,
         };
         return View(model);
     }
-
+    
+   
 
     [HttpPost]
 
@@ -492,5 +493,8 @@ public class TestsController(UserManager<UserEntity> userManager,
         }).ToList();
         return View(model);
     }
-    
-}
+
+
+
+
+   }
