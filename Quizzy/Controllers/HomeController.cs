@@ -35,6 +35,9 @@ public class HomeController : Controller
         });
     }
 
+
+   
+
     
     public IActionResult Contact_Submit(string Email, string Message, string Name)
     {
@@ -90,5 +93,12 @@ public class HomeController : Controller
             Console.WriteLine("Error: " + ex.Message);
         }
     }
+    
+    
+    
+    
+    
+    
+    
 
 }

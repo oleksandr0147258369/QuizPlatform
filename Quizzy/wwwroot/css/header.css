@@ -150,7 +150,7 @@ header{
         padding: 0;
     }
     .menu-container.active .menu ul li{
-        margin: 20px 0;
+        margin: 10px 0;
     }
     .menu-container.active .menu ul li a{
         font-size: 1.5rem;
