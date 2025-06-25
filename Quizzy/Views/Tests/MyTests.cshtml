@@ -1,1 +1,23 @@
-<h1>not added yet</h1>
+@model Quizzy.Models.Tests.MyTestsViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Tests";
+    ViewData["stylesheet"] = "tests/myTests.css";
+}
+
+<div class="builder-container">
+    <h1 class="title">My Tests</h1>
+    @foreach (var t in Model.Tests)
+    {
+        <div class="test-summary">
+            @if (!t.IsPublished)
+            {
+                <span class="draft-label alert">Draft</span>
+            }
+            <h2><a asp-route-id="@t.TestId" asp-action="Preview">@t.Name</a></h2>
+            <p><strong>Total Questions:</strong> @t.QuestionsCount</p>
+            <p><strong>Made By:</strong> @t.CreatedBy.FirstName @t.CreatedBy.LastName</p>
+            <p><strong>Created:</strong> @t.CreatedUtc.ToShortDateString()</p>
+        </div>
+    }
+</div>

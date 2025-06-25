@@ -86,7 +86,7 @@
                     {
                      
                             <div class="test-results__card">
-                                <h3 class="test-results__title">@t.Name</h3>
+                                <h3 class="test-results__title"><a style="text-decoration: none" asp-route-id="@t.TestId" asp-action="Preview">@t.Name</a></h3>
                                 <p class="test-results__date">Created: @t.CreatedUtc.ToShortDateString()</p>
 
                                 @if (!string.IsNullOrEmpty(t.Description))

@@ -1,32 +1,27 @@
-@model Quizzy.Models.Tests.BuilderViewModel
+@model Quizzy.Models.Tests.PreviewViewModel
 
 @{
-    ViewData["Title"] = "Test Builder";
     Layout = "_Layout";
-    ViewData["HasFooter"] = false;
-    ViewData["HasHeader"] = false;
-    ViewData["stylesheet"] = "tests/builder.css";
+    ViewData["Title"] = "Preview";
+    ViewData["stylesheet"] = "tests/preview.css";
     int totalQuestions = Model.Questions?.Count ?? 0;
     int totalPoints = Model.Questions?.Sum(q => q.Points) ?? 0;
 }
 
 <div class="builder-container">
-    <h1 class="title">Test Builder</h1>
+    <h1 class="title">Test Preview</h1>
 
     <div class="test-summary">
         <h2>@Model.Name</h2>
-        <p><strong>Visibility:</strong> <span class="visibility">@((Model.IsPrivate ? "Private" : "Public"))</span></p>
         <p><strong>Total Questions:</strong> @totalQuestions</p>
         <p><strong>Maximum Score:</strong> @totalPoints points</p>
+        <p><strong>Made By:</strong> @Model.CreatedBy.FirstName @Model.CreatedBy.LastName</p>
+        <p><strong>Created:</strong> @Model.CreatedUtc.ToShortDateString()</p>
 
         <div class="actions">
-            <a asp-controller="Tests" asp-action="Edit" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test Info</a>
-            <a asp-controller="Tests" asp-action="AddQuestion" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">+ Add New Question</a>
-            <form asp-controller="Tests" asp-action="DeleteTest" asp-route-id="@ViewContext.RouteData.Values["id"]" method="post" onsubmit="return confirm('Are you sure you want to delete this test?');" style="display:inline;">
-                <button type="submit" class="btn danger">🗑 Delete This Test</button>
-            </form>
-            <a asp-controller="Tests" asp-action="Publish" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Publish Test</a>
-            <a asp-controller="Tests" asp-action="MyTests" class="btn secondary">Save and go to My Tests</a>
+            <a asp-controller="Tests" asp-action="Builder" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test</a>
+            <a asp-controller="Tests" asp-action="CreateHomework" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Homework</a>
+            <a asp-controller="Tests" asp-action="PassTest" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn secondary">Pass Test</a>
         </div>
     </div>
 
@@ -59,11 +54,6 @@
                             </li>
                         }
                     </ul>
-                    <div class="question-actions">
-                        <a asp-route-questionId="@q.Id" asp-action="EditQuestion" asp-controller="Tests" class="btn small primary">Edit</a>
-                        <a asp-route-questionId="@q.Id" asp-action="DuplicateQuestion" asp-controller="Tests" class="btn small secondary">Duplicate</a>
-                        <a asp-route-questionId="@q.Id" asp-route-testId="@ViewContext.RouteData.Values["id"]" asp-action="DeleteQuestion" asp-controller="Tests" class="btn small danger">Delete</a>
-                    </div>
                 </div>
             }
         </div>

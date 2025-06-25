@@ -1,0 +1,81 @@
+:root {
+    --primary: #9c80e7;
+    --primary-dark: #6e57d3;
+    --background: #fff7f7;
+    --text: #333333;
+    --border: #cccccc;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.builder-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 1rem;
+    min-height: calc(100vh - 100px);
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.test-summary {
+    position: relative;
+    background-color: white;
+    border: 1px solid var(--border);
+    padding: 1.5rem 1rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.test-summary h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+p{
+    color: var(--text);
+}
+a{
+    text-decoration: none;
+}
+
+.test-summary p {
+    margin: 0.3rem 0;
+}
+
+.draft-label {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    background-color: var(--border);
+    color: var(--text);
+    border-radius: 4px;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .builder-container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 1.6rem;
+    }
+}

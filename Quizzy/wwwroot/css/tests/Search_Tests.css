@@ -9,7 +9,6 @@
 body {
     background: #fef6f9;
     color: #333;
-
 }
 
 
@@ -375,4 +374,20 @@ h2 {
 .search-modal__close {
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+@media (max-width: 950px) {
+    .model-content{
+        width: 60%;
+    }
+}
+
+@media (max-width: 600px) {
+    .main{
+        height: auto;
+    }
+    .stats-grid {
+        flex-direction: column;
+        align-items: center;
+    }
 }
