@@ -22,4 +22,5 @@ public class TestSession
     [ForeignKey("TestHomeworkId")] public virtual TestHomework TestHomework { get; set; }
     
     public virtual List<UserAnswer> UserAnswers { get; set; }
+    public virtual Result? Result { get; set; }
 }

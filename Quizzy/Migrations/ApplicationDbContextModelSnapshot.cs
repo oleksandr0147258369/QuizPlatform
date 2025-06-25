@@ -396,7 +396,8 @@ namespace Quizzy.Migrations
 
                     b.HasKey("ResultId");
 
-                    b.HasIndex("TestSessionId");
+                    b.HasIndex("TestSessionId")
+                        .IsUnique();
 
                     b.ToTable("Results");
                 });
@@ -714,8 +715,8 @@ namespace Quizzy.Migrations
             modelBuilder.Entity("Quizzy.Data.Entities.Result", b =>
                 {
                     b.HasOne("Quizzy.Data.Entities.TestSession", "TestSession")
-                        .WithMany()
-                        .HasForeignKey("TestSessionId")
+                        .WithOne("Result")
+                        .HasForeignKey("Quizzy.Data.Entities.Result", "TestSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -876,6 +877,8 @@ namespace Quizzy.Migrations
 
             modelBuilder.Entity("Quizzy.Data.Entities.TestSession", b =>
                 {
+                    b.Navigation("Result");
+
                     b.Navigation("UserAnswers");
                 });
 #pragma warning restore 612, 618

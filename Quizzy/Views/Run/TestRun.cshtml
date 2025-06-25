@@ -5,111 +5,34 @@
     Layout = "_Layout";
     ViewData["HasHeader"] = false;
     ViewData["HasFooter"] = false;
+    ViewData["stylesheet"] = "Run/TestRun.css";
 }
 
-<style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f3f4f6;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        height: 100vh;
-    }
-
-    /*.container {*/
-    /*    width: 100%;*/
-    /*    max-width: 800px;*/
-    /*    padding: 20px;*/
-    /*}*/
-
-    .question-card {
-        background-color: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .question h2 {
-        font-size: 28px;
-        color: #111827;
-        text-align: center;
-    }
-
-    .answers {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
-        width: 100%;
-    }
-
-    .answer-option {
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        border: 2px solid #d1d5db;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-        font-size: 18px;
-    }
-
-    .answer-option:hover {
-        background-color: #f9fafb;
-    }
-
-    .answer-option input {
-        margin-right: 12px;
-        width: 20px;
-        height: 20px;
-        accent-color: #10b981;
-    }
-
-    .answer-btn {
-        padding: 12px 24px;
-        background-color: #10b981;
-        color: white;
-        font-size: 20px;
-        cursor: pointer;
-        border-radius: 8px;
-        border: none;
-        margin-top: 20px;
-        transition: background-color 0.3s;
-    }
-
-    .answer-btn:hover {
-        background-color: #059669;
-    }
-
-    @@media (max-width: 768px) {
-        .answers {
-            font-size: 16px;
-        }
-    }
-</style>
 <h1 id = "QCount" style = "margin: 50px"></h1>
 
-<div class="container" id="question-container" style = "position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-    <div>Loading...</div>
+<div class="container" id="question-container" >
+    <div style = "position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Loading...</div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const code = "@Model.Code";
-        localStorage.removeItem("currentIndex_" + code);
+        const sessionIdKey = "sessionId_" + code;
 
-        var currentIndex = 0;
+// Спроба взяти SessionId з localStorage
+        let sessionId = localStorage.getItem(sessionIdKey);
+        if (!sessionId) {
+            sessionId = "@Model.SessionId";
+            localStorage.setItem(sessionIdKey, sessionId);
+        }
+
+        let currentIndex = parseInt(localStorage.getItem("currentIndex_" + code)) || 0;
+
         const totalCount = @Model.Questions.Count;
         const container = document.getElementById("question-container");
 
 
-        
+
 
         function renderQuestion(data) {
             container.innerHTML = `
@@ -126,10 +49,10 @@
          <button class="answer-btn submit-answer">Continue</button>
             </div>
     `;
-        
 
 
-        document.querySelector(".submit-answer").addEventListener("click", () => {
+
+            document.querySelector(".submit-answer").addEventListener("click", () => {
                 const selected = [...container.querySelectorAll('input[name="selectedAnswers"]:checked')];
                 if (selected.length === 0) {
                     alert("Виберіть хоча б одну відповідь!");
@@ -144,7 +67,7 @@
                         code: code,
                         questionIndex: currentIndex,
                         answerIds: answers,
-                        SesId: @Model.SessionId
+                        SesId: sessionId
                     })
                 }).then(res => {
                     currentIndex++;
@@ -157,13 +80,13 @@
         }
 
         function loadQuestion() {
-           
-   
+
+
             if (currentIndex >= totalCount) {
                 fetch("/Run/Result", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ sesId: @Model.SessionId })
+                    body: JSON.stringify({ sesId: sessionId })
                 })
                     .then(resultResponse => {
                         if (resultResponse.redirected) {
@@ -172,7 +95,10 @@
                             window.location.href = "/Run/ShowResult";
                         }
                     });
-              
+                localStorage.removeItem("currentIndex_" + code);
+                localStorage.removeItem(sessionIdKey);
+
+
                 return;
             }
 

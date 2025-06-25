@@ -57,45 +57,9 @@ public class RunController(UserManager<UserEntity> userManager,
     }
 
     [HttpGet]
-    public async Task<IActionResult> TestRun(string code)
+    public async Task<IActionResult> TestRun()
     {
-        if (!int.TryParse(code, out int testId))
-        {
-            return BadRequest("Invalid test code");
-        }
-
-        var test = await _db.Tests.FirstOrDefaultAsync(t => t.TestId == testId);
-        if (test == null)
-        {
-            return NotFound("Test not found");
-        }
-
-        var questions = await _db.Questions
-            .Where(q => q.TestId == testId)
-            .Include(q => q.Answers)
-            .ToListAsync();
-
-        var session = new TestSession
-        {
-            UserId = int.Parse(userManager.GetUserId(User)),
-            TestId = testId,
-            StartedAt = DateTime.UtcNow,
-            IsFinished = false,
-            Name = "Anonymous"
-        };
-
-        await _db.TestSessions.AddAsync(session);
-        await _db.SaveChangesAsync();
-
-        var model = new RunTestViewModel
-        {
-            Questions = questions,
-            Code = code,
-            IsSuccessful = true,
-            SessionId = session.TestSessionId
-        };
-
-        return View(model); 
+        return View(); 
     }
 
 
@@ -114,6 +78,37 @@ public class RunController(UserManager<UserEntity> userManager,
 
         return View(viewModel);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> ShowResult(int id)
+    {
+        var session = await _db.TestSessions
+            .FirstOrDefaultAsync(s => s.TestSessionId == id);
+
+        if (session == null)
+            return NotFound("Session not found");
+
+        var result = await _db.Results
+            .FirstOrDefaultAsync(r => r.TestSessionId == id);
+
+        if (result == null)
+            return NotFound("Result not found");
+
+        var model = new ResultViewModel
+        {
+            FinishedAt = session.FinishedAt,
+            Points = result.Points,
+            TimeSpent = result.TimeSpent,
+            TimePerQuestion = result.TimePerQuestion,
+            StartedAt = session.StartedAt,
+            UserName = session.Name,
+            MaxPoints = result.TotalPoints
+        };
+
+        return View("ShowResult", model);
+    }
+
+
 
 
 
@@ -123,63 +118,60 @@ public class RunController(UserManager<UserEntity> userManager,
     [HttpPost]
     public async Task<IActionResult> Code(string name, string code)
     {
-        var test = await _db.Tests.FirstOrDefaultAsync(t => t.TestId == int.Parse(code));
-        if (test != null)
-        {
-            var SessionList = _db.TestSessions.Where(t => t.TestId == test.TestId).ToList();
-            if (!SessionList.Any())
-            {
-                SessionList = SessionList.Where(t => t.UserId == int.Parse(userManager.GetUserId(User))).ToList();
-            }
-            // if (!SessionList.Any())
-            // {
-            var Questions = _db.Questions
-                .Where(t => t.TestId == test.TestId)
-                .Include(q => q.Answers)
-                .ToList();
+        if (!int.TryParse(code, out int testId))
+            return BadRequest("Invalid code format.");
 
-            foreach (var question in Questions)
+        var test = await _db.Tests
+            .Include(t => t.Questions)
+            .ThenInclude(q => q.Answers)
+            .FirstOrDefaultAsync(t => t.TestId == testId);
+
+        if (test == null)
+            return NotFound("Test not found.");
+
+        // Спроба знайти вже існуючу незавершену сесію
+        var userId = int.Parse(userManager.GetUserId(User));
+        var existingSession = await _db.TestSessions
+            .FirstOrDefaultAsync(s =>
+                s.TestId == testId &&
+                s.UserId == userId &&
+                !s.IsFinished);
+
+        int sessionId;
+
+        if (existingSession != null)
+        {
+            sessionId = existingSession.TestSessionId;
+        }
+        else
+        {
+            var session = new TestSession
             {
-                Console.WriteLine(question.Text);
-            }
-                
-            TestSession session = new TestSession
-            {
-                UserId = int.Parse(userManager.GetUserId(User)),
+                UserId = userId,
                 Name = name,
                 IsTestHomework = false,
-                TestId = int.Parse(code),
+                TestId = testId,
                 StartedAt = DateTime.UtcNow,
-                IsFinished = false
+                IsFinished = false,
+                Result = null
             };
 
             await _db.TestSessions.AddAsync(session);
             await _db.SaveChangesAsync();
-
-            int SessionID = session.TestSessionId;
-            Console.WriteLine(SessionID + " first session MMM");
-
-            RunTestViewModel model = new RunTestViewModel
-            {
-                Questions = Questions,
-                Code = code,
-                IsSuccessful = true,
-                SessionId = SessionID
-            };
-
-            return View("TestRun", model);
-            // }
+            sessionId = session.TestSessionId;
         }
-        //...errors?
-        Console.WriteLine("Error occured");
-        RunTestViewModel model1 = new RunTestViewModel
-        {
-            IsSuccessful = false,
-            Error = "Something went wrong"
-        };
-        return RedirectToAction("TestRun", new { code = code });
 
+        RunTestViewModel model = new RunTestViewModel
+        {
+            Questions = test.Questions.ToList(),
+            Code = code,
+            IsSuccessful = true,
+            SessionId = sessionId
+        };
+
+        return View("TestRun", model);
     }
+
     
     
     // [HttpPost]
@@ -426,9 +418,8 @@ public async Task<IActionResult> Result([FromBody] SessionDto dto)
     TempData["StartedAt"] = ThisSession.StartedAt.ToString();
     TempData["FinishedAt"] = ThisSession.FinishedAt.ToString();
     TempData["UserName"] = _db.TestSessions.FirstOrDefault(s => s.TestSessionId == dto.SesId).Name;
-    return View("ShowResult", v);
+    return RedirectToAction("ShowResult", new { id = dto.SesId });
 
-    return RedirectToAction("ShowResult");
 }
 
 
