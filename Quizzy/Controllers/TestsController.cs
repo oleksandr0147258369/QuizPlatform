@@ -472,27 +472,27 @@ public class TestsController(UserManager<UserEntity> userManager,
         return RedirectToAction("MyTests");
     }
 
-    [HttpGet]
-    public IActionResult MyTests()
-    {
-        var userId = int.Parse(userManager.GetUserId(User));
-        var user = _db.Users.FirstOrDefault(u => u.Id == userId);
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
-
-        var userTests = _db.Tests.Where(t => t.CreatedById == user.Id).ToList();
-        var model = userTests.Select(t => new MyTestViewModel
-        {
-            Name = t.Name,
-            QuestionsCount = t.QuestionsQuantity,
-            TestId = t.TestId,
-            CreatedBy = user,
-            CreatedUtc = t.CreatedUtc
-        }).ToList();
-        return View(model);
-    }
+    // [HttpGet]
+    // public IActionResult MyTests()
+    // {
+    //     var userId = int.Parse(userManager.GetUserId(User));
+    //     var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+    //     if (user == null)
+    //     {
+    //         return RedirectToAction("Login", "Account");
+    //     }
+    //
+    //     var userTests = _db.Tests.Where(t => t.CreatedById == user.Id).ToList();
+    //     var model = userTests.Select(t => new MyTestViewModel
+    //     {
+    //         Name = t.Name,
+    //         QuestionsCount = t.QuestionsQuantity,
+    //         TestId = t.TestId,
+    //         CreatedBy = user,
+    //         CreatedUtc = t.CreatedUtc
+    //     }).ToList();
+    //     return View(model);
+    // }
 
 
 
