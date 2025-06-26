@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,21 +19,23 @@ public class TestsController(UserManager<UserEntity> userManager,
     public IActionResult ResultsOfTests(int id)
     {
         var results = _db.Results
-    .Include(r => r.TestSession)
-        .ThenInclude(ts => ts.UserEntity)
-    .Where(r => r.TestSession.TestId == id)
-    .Select(r => new ResultCardViewModel
-    {
-        ResultId = r.ResultId, // <=== ДОДАНО
-        UserId = r.TestSession.UserEntity.Id,
-        TestId = r.TestSession.TestId ?? 0,
-        FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
-        Points = r.Points,
-        TotalPoints = r.TotalPoints,
-        TimeSpent = r.TimeSpent,
-        TimePerQuestion = r.TimePerQuestion
-    })
-    .ToList();
+        .Include(r => r.TestSession)
+            .ThenInclude(ts => ts.UserEntity)
+        .Where(r => r.TestSession.TestId == id && !r.TestSession.IsTestHomework) // ? додано фільтр
+        .Select(r => new ResultCardViewModel
+        {
+            ResultId = r.ResultId,
+            UserId = r.TestSession.UserEntity.Id,
+            TestId = r.TestSession.TestId ?? 0,
+            FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
+            Points = r.Points,
+            TotalPoints = r.TotalPoints,
+            TimeSpent = r.TimeSpent,
+            TimePerQuestion = r.TimePerQuestion
+        })
+        .ToList();
+
+        return View(results);
 
 
         return View(results);
@@ -63,6 +66,103 @@ public class TestsController(UserManager<UserEntity> userManager,
         return View(result);
     }
 
+    [Authorize]
+    public async Task<IActionResult> MyHomework()
+    {
+        var userIdStr = userManager.GetUserId(User);
+        if (!int.TryParse(userIdStr, out int userId))
+            return Unauthorized();
+
+        var homeworks = await _db.TestHomeworks
+    .Include(hw => hw.Test)
+        .ThenInclude(t => t.CreatedBy)
+    .Include(hw => hw.CreatedBy)
+    .Where(hw => hw.CreatedById == userId)
+    .Select(hw => new MyHomeworkViewModel
+    {
+        TestHomeworkId = hw.TestHomeworkId,
+        TestId = hw.TestId,
+        TestName = hw.Test.Name,
+        
+        IsPublished = hw.Test.IsPublished,
+        CreatedUtc = hw.CreatedUtc,
+        HasDeadline = hw.HasDeadline,
+        Deadline = hw.Deadline,
+        HasTimeToComplete = hw.HasTimeToComplete,
+        TimeToComplete = hw.TimeToComplete,
+        HomeworkCreatedByFirstName = hw.CreatedBy.FirstName,
+        HomeworkCreatedByLastName = hw.CreatedBy.LastName,
+
+        Results = _db.Results
+            .Where(r => r.TestSession.TestId == hw.TestId && r.TestSession.IsTestHomework)
+            .Select(r => new ResultCardViewModel
+            {
+                ResultId = r.ResultId,
+                UserId = r.TestSession.UserEntity.Id,
+                TestId = r.TestSession.TestId ?? 0,
+                FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
+                Points = r.Points,
+                TotalPoints = r.TotalPoints,
+                TimeSpent = r.TimeSpent,
+                TimePerQuestion = r.TimePerQuestion
+            })
+            .ToList()
+    })
+    .ToListAsync();
+
+        return View(homeworks);
+    }
+
+    public async Task<IActionResult> PreviewHW(int id)  // або int TestHomeworkId
+    {
+        var homework = await _db.TestHomeworks
+            .Include(hw => hw.Test)
+                .ThenInclude(t => t.CreatedBy)
+            .Include(hw => hw.CreatedBy)
+            .FirstOrDefaultAsync(hw => hw.TestHomeworkId == id);
+
+        if (homework == null)
+        {
+            return NotFound();
+        }
+
+        var results = await _db.Results
+            .Include(r => r.TestSession)
+                .ThenInclude(ts => ts.UserEntity)
+            .Where(r => r.TestSession.TestId == homework.TestId)
+            .Select(r => new ResultCardViewModel
+            {
+                ResultId = r.ResultId,
+                UserId = r.TestSession.UserEntity.Id,
+                TestId = r.TestSession.TestId ?? 0,
+                FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
+                Points = r.Points,
+                TotalPoints = r.TotalPoints,
+                TimeSpent = r.TimeSpent,
+                TimePerQuestion = r.TimePerQuestion
+            })
+            .ToListAsync();
+
+        var model = new MyHomeworkViewModel
+        {
+            TestHomeworkId = homework.TestHomeworkId,
+            TestId = homework.TestId,
+            TestName = homework.Test.Name,
+            
+            IsPublished = homework.Test.IsPublished,
+            CreatedUtc = homework.CreatedUtc,
+            HasDeadline = homework.HasDeadline,
+            Deadline = homework.Deadline,
+            HasTimeToComplete = homework.HasTimeToComplete,
+            TimeToComplete = homework.TimeToComplete,
+            HomeworkCreatedByFirstName = homework.CreatedBy.FirstName,
+            HomeworkCreatedByLastName = homework.CreatedBy.LastName,
+            Results = results
+        };
+
+        return View(model);
+    }
+
 
     public IActionResult Search_Test()
     {
@@ -80,6 +180,22 @@ public class TestsController(UserManager<UserEntity> userManager,
             TestId = id
         };
         return View(model);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteHomework(int id)
+    {
+        var homework = await _db.TestHomeworks.FindAsync(id);
+
+        if (homework == null)
+        {
+            return NotFound();
+        }
+
+        _db.TestHomeworks.Remove(homework);
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction("MyHomework"); // або інша сторінка, куди повертати після видалення
     }
 
     [HttpGet]

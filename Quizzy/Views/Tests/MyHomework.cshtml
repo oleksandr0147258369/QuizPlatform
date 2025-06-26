@@ -1,6 +1,37 @@
-﻿
+﻿@model List<Quizzy.Models.Tests.MyHomeworkViewModel>
 @{
 	Layout = "_Layout";
 	ViewData["stylesheet"] = "tests/myhomework.css";
 }
+<div class="builder-container">
+    <h1 class="title">Assigned Homework</h1>
+
+    @foreach (var hw in Model)
+    {
+        <div class="test-summary">
+            @if (!hw.IsPublished)
+            {
+                <span class="draft-label alert">Draft</span>
+            }
+
+            <h2>
+                <a asp-action="PreviewHW" asp-route-id="@hw.TestHomeworkId">@hw.TestName</a>
+            </h2>
+
+            <p><strong>Join Code:</strong> @hw.TestHomeworkId</p>
+            <p><strong>Created By:</strong> @hw.HomeworkCreatedByFirstName @hw.HomeworkCreatedByLastName</p>
+            <p><strong>Created On:</strong> @hw.CreatedUtc.ToShortDateString()</p>
+
+            @if (hw.HasDeadline && hw.Deadline.HasValue)
+            {
+                <p><strong>Deadline:</strong> @hw.Deadline.Value.ToString("dd.MM.yyyy HH:mm")</p>
+            }
+
+            @if (hw.HasTimeToComplete && hw.TimeToComplete.HasValue)
+            {
+                <p><strong>Time Limit:</strong> @hw.TimeToComplete.Value.ToString(@"hh\:mm")</p>
+            }
+        </div>
+    }
+</div>
 
