@@ -33,6 +33,7 @@
     if (User.Identity.IsAuthenticated)
     {
         @* <p>autentificated</p> *@
+        
         try
         {
             @await Component.InvokeAsync("Header")
