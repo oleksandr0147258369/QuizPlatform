@@ -1,0 +1,84 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+}
+
+/*.container {*/
+/*    width: 100%;*/
+/*    max-width: 800px;*/
+/*    padding: 20px;*/
+/*}*/
+
+.question-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.question h2 {
+    font-size: 28px;
+    color: #111827;
+    text-align: center;
+}
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.answer-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 18px;
+}
+
+.answer-option:hover {
+    background-color: #f9fafb;
+}
+
+.answer-option input {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    accent-color: #10b981;
+}
+
+.answer-btn {
+    padding: 12px 24px;
+    background-color: #10b981;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.answer-btn:hover {
+    background-color: #059669;
+}
+
+@media (max-width: 768px) {
+    .answers {
+        font-size: 16px;
+    }
+}

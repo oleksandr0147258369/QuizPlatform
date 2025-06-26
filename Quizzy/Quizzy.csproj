@@ -57,6 +57,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="wwwroot\js\Run\" />
       <Folder Include="wwwroot\test\" />
     </ItemGroup>
 
