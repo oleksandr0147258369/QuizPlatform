@@ -101,6 +101,7 @@ public class RunController(UserManager<UserEntity> userManager,
 
     public IActionResult ShowResult()
     {
+
         var viewModel = new ResultViewModel
         {
             Points = int.Parse(TempData["Points"].ToString()),
@@ -111,7 +112,6 @@ public class RunController(UserManager<UserEntity> userManager,
             UserName = TempData["UserName"].ToString(),
             MaxPoints = int.Parse(TempData["MaxPoints"].ToString())
         };
-
         return View(viewModel);
     }
 
@@ -438,6 +438,10 @@ public async Task<IActionResult> Result([FromBody] SessionDto dto)
     // {
     //     
     // }
+    
+    
+    
+    
     
 }
 public class QuestionRequestModel
