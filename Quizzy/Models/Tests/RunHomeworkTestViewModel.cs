@@ -6,6 +6,8 @@ public class RunHomeworkTestViewModel
 {
     public List<Question> Questions { get; set; }
     public TimeSpan? TimeToComplete { get; set; }
+    public DateTime StatedAt { get; set; }
+    public string Username { get; set; }
     public string HomeworkCode { get; set; }
     
     public string Code { get; set; }

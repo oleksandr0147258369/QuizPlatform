@@ -6,172 +6,9 @@
     Layout = "_Layout";
     ViewData["HasHeader"] = false;
     ViewData["HasFooter"] = false;
+    ViewData["stylesheet"] = "Run/Code.css";
 }
-<style>
-    body{
-        width: 100%;
-        height: 100vh;
-        background-color: #f0f4f9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .main{
-        display: flex;
-        width: 1040px;
-        align-items: center;
-        border-radius: 10px;
-        background-color: #6c4dd9;
 
-    }
-    .Details{
-        width: 50%;
-        display: flex;
-        align-self:self-start;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-       
-        border-bottom-right-radius:  10px;
-        border-bottom-left-radius:  10px;
-        padding: 30px;
-        box-sizing: border-box;
-    }
-
-    .Details p{
-        font-size: 22px;
-    }
-
-    .Details h1, .Details p, .Details .logo {
-        margin: 0;
-        margin: 5px;
-    }
-
-    .Details h1{
-        font-weight: 100;
-        font-size: 32px;
-    }
-
-    
-    
-
-    .Details .logo{
-        width: 45%;
-        height: auto;
-    }
-
-    .Details .logo img{
-        width: 100%;
-        height: auto;
-    }
-    .Details h1,p{
-        color: white;
-    }
-    .Details div{
-        margin: 0 20px;
-    }
-
-    .form{
-        width: 70%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    form{
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        margin: 40px;
-        margin-bottom: 0px;
-        align-items: center;
-    }
-
-    form input{
-        width: calc(100% - 20px);
-        padding: 10px;
-        margin: 20px 0;
-        border-radius: 5px;
-        border: none;
-        font-size: 16px;
-    }
-    form div{
-        width: 100%;
-    }
-
-    form div label{
-        font-size: 22px;
-        margin: 0;
-        margin-bottom: 10px;
-        color: white;
-    }
-
-    form div input{
-        margin-top: 5px;
-    }
-
-    .submit{
-        display: flex;
-        justify-content:flex-end;
-        align-items: center;
-        width: 100%;
-        margin: 10px 0;
-       
-    }
-
-    
-
-    form input[type="submit"]{
-        width: 80px;
-        background-color: #2062db;
-        border:none;
-        border-radius: 20px;
-        padding: 10px 20px;
-        font-size: 20px;
-        margin:20px;
-        margin-right: 0;
-        transition: all 200ms ease;
-        color: white;
-    } 
-
-    form input[type="submit"]:hover{
-        background-color: #2952c8;
-        cursor: pointer;
-    }
-
-
-    @@media (max-width: 1600px) {
-        .main{
-            width: 80%;
-        }
-    }
-
-    @@media (max-width: 1330px) {
-            .main{
-            display: flex;
-            flex-direction: column;
-            width: 480px;
-            align-items: center;
-            border-radius: 10px; 
-            background-color: #6c4dd9;
-        }
-
-        .form{
-            width: 100%;
-        }
-        .submit{
-            justify-content: space-between;
-        }
-        .Details{
-            width: 100%;
-        }
-        
-    }
-
-    
-
-    
-</style>
 <body>
     
     <div class = "main">
@@ -180,26 +17,26 @@
                 <img src="~/images/logos/Logo1.png" alt="logo">
             </div>
             <h1>Pass the test</h1>
-            <p>Enter the code of the test<br>and you name</p>
+            <p>Enter the code of the homework<br>and your name</p>
         </div>
         <div class="form">
             <form asp-controller="Run" asp-action="HomeworkCode" method="post">
                 @if (Model.FullView)
                 {
                     <div>
-                        <label asp-for="HomeworkCode">Homework Code (required)</label>
-                        <input type="number" asp-for="HomeworkCode" placeholder="Code" required>
+                        <label asp-for="HomeworkCode">Code (required)</label>
+                        <input type="number" asp-for="HomeworkCode" required>
                     </div>
                 }
                 else
                 {
                     <!-- приховано передаємо код -->
-                    <input type="hidden" asp-for="HomeworkCode" value="@Model.HomeworkCode" />
+                    <input type="hidden" asp-for="HomeworkCode"/>
                 }
 
                 <div>
-                    <label for="Name">Name (required)</label>
-                    <input type="text" name="name" placeholder="Name" id="Name" required>
+                    <label asp-for="Username">Name (required)</label>
+                    <input type="text" asp-for="Username" required>
                 </div>
                 <div class="submit">
                     <input type="submit" value="Pass">
@@ -219,3 +56,17 @@
  
     
 </body>
+<script>
+    const hwcode = "@Model.Code";
+
+    // В localStorage зберігається сесія — якщо це нова сесія, старі значення очищаємо
+    // localStorage.clearSession - допоміжний флаг
+    const shouldClearStorage = localStorage.getItem("clearSession_" + hwcode);
+
+    if (shouldClearStorage === "true") {
+        ["currentIndex_", "timerRemaining_"].forEach(key => {
+            localStorage.removeItem(key + hwcode);
+        });
+        localStorage.setItem("clearSession_" + hwcode, "false");
+    }
+</script>
