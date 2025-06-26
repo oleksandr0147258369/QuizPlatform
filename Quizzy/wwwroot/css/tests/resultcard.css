@@ -1,0 +1,75 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+}
+
+*, ::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+:root {
+    --primary: #9c80e7;
+    --primary-dark: #6e57d3;
+    --background: #fff7f7;
+    --text: #333333;
+    --error: #e74c3c;
+    --success: #2ecc71;
+    --border: #cccccc;
+}
+.result-card {
+    background-color: var(--background);
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 850px;
+    margin: 20px auto; /* Відступи зверху і знизу + по центру */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text);
+    box-shadow: 0 8px 20px rgba(110, 87, 211, 0.2); /* більш м'яка тінь */
+    transition: box-shadow 0.3s ease;
+}
+
+    .result-card:hover {
+        box-shadow: 0 12px 30px rgba(110, 87, 211, 0.4); /* посилена тінь при наведенні */
+    }
+
+    .result-card h3.full-name {
+        color: var(--primary-dark);
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+
+    .result-card p {
+        margin: 6px 0 12px 0;
+        font-size: 16px;
+    }
+
+        .result-card p strong {
+            color: var(--primary);
+        }
+
+/* Прогрес-бар */
+
+.progress-bar {
+    background-color: var(--border);
+    border-radius: 10px;
+    height: 16px;
+    width: 100%;
+    overflow: hidden;
+    margin: 16px 0 8px 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.progress {
+    background-color: var(--primary);
+    height: 100%;
+    width: 0%;
+    border-radius: 10px 0 0 10px;
+    transition: width 0.5s ease-in-out;
+}

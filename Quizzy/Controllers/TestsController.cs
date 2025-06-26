@@ -14,6 +14,55 @@ public class TestsController(UserManager<UserEntity> userManager,
     SignInManager<UserEntity> signInManager,
     IMapper mapper, ApplicationDbContext _db) : Controller
 {
+    [HttpGet("Tests/ResultsOfTests/{id}")]
+    public IActionResult ResultsOfTests(int id)
+    {
+        var results = _db.Results
+    .Include(r => r.TestSession)
+        .ThenInclude(ts => ts.UserEntity)
+    .Where(r => r.TestSession.TestId == id)
+    .Select(r => new ResultCardViewModel
+    {
+        ResultId = r.ResultId, // <=== ÄÎÄÀÍÎ
+        UserId = r.TestSession.UserEntity.Id,
+        TestId = r.TestSession.TestId ?? 0,
+        FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
+        Points = r.Points,
+        TotalPoints = r.TotalPoints,
+        TimeSpent = r.TimeSpent,
+        TimePerQuestion = r.TimePerQuestion
+    })
+    .ToList();
+
+
+        return View(results);
+    }
+
+    public IActionResult ResultCard(int resultId)
+    {
+        var result = _db.Results
+            .Include(r => r.TestSession)
+                .ThenInclude(ts => ts.UserEntity)
+            .Where(r => r.ResultId == resultId)
+            .Select(r => new ResultCardViewModel
+            {
+                ResultId = r.ResultId,
+                UserId = r.TestSession.UserEntity.Id,
+                TestId = r.TestSession.TestId ?? 0,
+                FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
+                Points = r.Points,
+                TotalPoints = r.TotalPoints,
+                TimeSpent = r.TimeSpent,
+                TimePerQuestion = r.TimePerQuestion
+            })
+            .FirstOrDefault();
+
+        if (result == null)
+            return NotFound();
+
+        return View(result);
+    }
+
 
     public IActionResult Search_Test()
     {
