@@ -23,7 +23,7 @@ public class TestsController(UserManager<UserEntity> userManager,
     .Where(r => r.TestSession.TestId == id)
     .Select(r => new ResultCardViewModel
     {
-        ResultId = r.ResultId, // <=== ÄÎÄÀÍÎ
+        ResultId = r.ResultId, // <=== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         UserId = r.TestSession.UserEntity.Id,
         TestId = r.TestSession.TestId ?? 0,
         FullName = r.TestSession.UserEntity.FirstName + " " + r.TestSession.UserEntity.LastName,
@@ -631,10 +631,12 @@ public class TestsController(UserManager<UserEntity> userManager,
             CreatedUtc = DateTime.UtcNow,
             HasDeadline = true,
             Deadline = deadlineUtc,
-            HasTimeToComplete = model.LimitTime,
-            TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
-                ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
-                : null
+            // HasTimeToComplete = model.LimitTime,
+            // TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
+            //     ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
+            //     : null
+            HasTimeToComplete = false,
+            TimeToComplete = null
         };
 
         _db.TestHomeworks.Add(homework);

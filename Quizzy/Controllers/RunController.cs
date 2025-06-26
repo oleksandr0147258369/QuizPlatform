@@ -202,51 +202,42 @@ public class RunController(
     [HttpPost]
     public async Task<IActionResult> HomeworkCode(RunHomeworkTestViewModel model)
     {
-        Console.WriteLine("hw code - " + model.HomeworkCode);
         if (!int.TryParse(model.HomeworkCode, out int testHwId))
             return BadRequest("Invalid hw code format.");
-        
 
         var hw = await _db.TestHomeworks.FirstOrDefaultAsync(t => t.TestHomeworkId == testHwId);
-        var test = _db.Tests.Include(e => e.Questions).ThenInclude(a => a.Answers)
-            .FirstOrDefault(t => t.TestId == hw.TestId);
-        
-        if (test == null)
-            return NotFound("Test not found.");
-        
+        if (hw == null) return NotFound("Test homework not found.");
+        if(hw.Deadline < DateTime.UtcNow)
+            return NotFound("Deadline has expired.");
+        var test = await _db.Tests
+            .Include(e => e.Questions)
+            .ThenInclude(a => a.Answers)
+            .FirstOrDefaultAsync(t => t.TestId == hw.TestId);
+        if (test == null) return NotFound("Test not found.");
 
-        var testId = test.TestId;
         var userId = int.Parse(userManager.GetUserId(User));
+        var existingSession = await _db.TestSessions
+            .FirstOrDefaultAsync(s => s.TestId == test.TestId && s.UserId == userId && !s.IsFinished);
 
-        // Знаходимо останню сесію цього користувача для цього тесту
-        var lastSession = await _db.TestSessions
-            .Where(s => s.TestId == testId && s.UserId == userId && s.IsTestHomework && s.IsFinished == false)
-            .OrderByDescending(s => s.StartedAt)
-            .FirstOrDefaultAsync();
-        
-        
-        
-        // Console.WriteLine(lastSession.StartedAt + " - " + lastSession.IsFinished);
         int sessionId;
         DateTime startTime;
 
-        if (lastSession != null && !lastSession.IsFinished)
+        if (existingSession != null)
         {
-            // Якщо сесія є і вона незавершена - продовжуємо її
-            sessionId = lastSession.TestSessionId;
-            startTime = lastSession.StartedAt;
-            return BadRequest("You have already finished your homework.");
+            // Якщо сесія активна — продовжуємо з тим самим часом
+            sessionId = existingSession.TestSessionId;
+            startTime = existingSession.StartedAt;
         }
         else
         {
-            // Якщо сесії немає або вона завершена - створюємо нову
+            // Якщо сесія завершена або не існує — створюємо нову
             var session = new TestSession
             {
                 UserId = userId,
                 Name = model.Username,
                 IsTestHomework = true,
                 TestHomeworkId = hw.TestHomeworkId,
-                TestId = testId,
+                TestId = test.TestId,
                 StartedAt = DateTime.UtcNow,
                 IsFinished = false,
                 Result = null
@@ -254,29 +245,22 @@ public class RunController(
 
             await _db.TestSessions.AddAsync(session);
             await _db.SaveChangesAsync();
+
             sessionId = session.TestSessionId;
             startTime = session.StartedAt;
         }
 
-        RunHomeworkTestViewModel viewModel = new RunHomeworkTestViewModel
+        var vm = new RunHomeworkTestViewModel
         {
             Questions = test.Questions.ToList(),
-            Code = testId.ToString(),
-            HomeworkCode = model.HomeworkCode,
+            Code = test.TestId.ToString(),
+            HomeworkCode = hw.TestHomeworkId.ToString(),
             IsSuccessful = true,
             SessionId = sessionId,
-            TimeToComplete = hw.TimeToComplete,
-            StatedAt = startTime
         };
-        if (lastSession == null || lastSession.IsFinished)
-        {
-            TempData["ClearStorage"] = true;
-        }
-        else
-        {
-            TempData["ClearStorage"] = false;
-        }
-        return View("HomeworkRun", viewModel);
+            
+
+        return View("HomeworkRun", vm);
     }
 
 

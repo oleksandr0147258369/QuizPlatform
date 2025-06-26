@@ -9,99 +9,53 @@
 }
 
 <h1 id = "QCount" style = "margin: 50px"></h1>
-<h1 id="QCount" style="margin: 50px"></h1>
-<div id="timer" style="font-size: 24px; color: red; margin-bottom: 20px; text-align: center;"></div>
 
 <div class="container" id="question-container" >
     <div style = "position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Loading...</div>
 </div>
 
 <script>
-    const clearStorage = "@TempData["ClearStorage"]" === "True";
-    const code = "@Model.Code";
-
-    if (clearStorage) {
-        localStorage.setItem("clearSession_" + code, "true");
-    }
     document.addEventListener("DOMContentLoaded", () => {
         const code = "@Model.Code";
-        const startedAt = new Date("@Model.StatedAt.ToString("O")");
-        const timeToComplete = @Model.TimeToComplete?.TotalSeconds ?? 0; // 0 - якщо немає обмеження
-        
+        const sessionIdKey = "sessionId_" + code;
 
-        let remainingSeconds;
-        if (timeToComplete > 0) {
-            let storedRemaining = localStorage.getItem("timerRemaining_" + code);
-            if (storedRemaining !== null) {
-                remainingSeconds = parseInt(storedRemaining, 10);
-            } else {
-                remainingSeconds = timeToComplete - Math.floor((new Date() - startedAt) / 1000);
-            }
+// Спроба взяти SessionId з localStorage
+        let sessionId = localStorage.getItem(sessionIdKey);
+        if (!sessionId) {
+            sessionId = "@Model.SessionId";
+            localStorage.setItem(sessionIdKey, sessionId);
         }
 
-        const timerElem = document.getElementById("timer");
+        let currentIndex = parseInt(localStorage.getItem("currentIndex_" + code)) || 0;
 
-        if (timeToComplete > 0) {
-            updateTimer();
-            var timerInterval = setInterval(() => {
-                localStorage.setItem("timerRemaining_" + code, remainingSeconds);
-                updateTimer();
-            }, 1000);
-        }
-
-        function updateTimer() {
-            if (remainingSeconds <= 0) {
-                clearInterval(timerInterval);
-                localStorage.removeItem("timerRemaining_" + code);
-                localStorage.removeItem("currentIndex_" + code);
-                finishTest();
-                return;
-            }
-            const minutes = Math.floor(remainingSeconds / 60);
-            const seconds = remainingSeconds % 60;
-            timerElem.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            remainingSeconds--;
-        }
-
-        var currentIndex = 0;
         const totalCount = @Model.Questions.Count;
         const container = document.getElementById("question-container");
 
-        function finishTest() {
-            fetch("/Run/Result", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sesId: @Model.SessionId })
-            })
-                .then(resultResponse => {
-                    if (resultResponse.redirected) {
-                        window.location.href = resultResponse.url;
-                    } else {
-                        window.location.href = "/Run/ShowResult";
-                    }
-                });
-        }
+
+
 
         function renderQuestion(data) {
             container.innerHTML = `
-                <div class="question-card">
-                    <div class="question"><h2>${data.text}</h2></div>
-                    <div class="answers">
-                        ${data.answers.map(answer => `
-                            <label class="answer-option">
-                                <input type="${data.hasMultipleCorrect ? 'checkbox' : 'radio'}" name="selectedAnswers" value="${answer.answerId}" />
-                                ${answer.text}
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button class="answer-btn submit-answer">Continue</button>
-                </div>
-            `;
+        <div class="question-card">
+            <div class="question"><h2>${data.text}</h2></div>
+            <div class="answers">
+                ${data.answers.map(answer => `
+                    <label class="answer-option">
+                        <input type="${data.hasMultipleCorrect ? 'checkbox' : 'radio'}" name="selectedAnswers" value="${answer.answerId}" />
+                        ${answer.text}
+                    </label>
+                `).join('')}
+            </div>
+         <button class="answer-btn submit-answer">Continue</button>
+            </div>
+    `;
+
+
 
             document.querySelector(".submit-answer").addEventListener("click", () => {
                 const selected = [...container.querySelectorAll('input[name="selectedAnswers"]:checked')];
                 if (selected.length === 0) {
-                    alert("Choose at least one answer!");
+                    alert("Виберіть хоча б одну відповідь!");
                     return;
                 }
 
@@ -113,7 +67,7 @@
                         code: code,
                         questionIndex: currentIndex,
                         answerIds: answers,
-                        SesId: @Model.SessionId
+                        SesId: sessionId
                     })
                 }).then(res => {
                     currentIndex++;
@@ -121,17 +75,34 @@
                     loadQuestion();
                 });
             });
-
             const countElem = document.getElementById("QCount");
             countElem.innerHTML = `${currentIndex + 1} / ${totalCount}`;
         }
 
         function loadQuestion() {
+
+
             if (currentIndex >= totalCount) {
-                finishTest();
+                fetch("/Run/Result", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sesId: sessionId })
+                })
+                    .then(resultResponse => {
+                        if (resultResponse.redirected) {
+                            window.location.href = resultResponse.url;
+                        } else {
+                            window.location.href = "/Run/ShowResult";
+                        }
+                    });
+                localStorage.removeItem("currentIndex_" + code);
+                localStorage.removeItem(sessionIdKey);
+
+
                 return;
             }
 
+            // ❗️ Якщо ще є питання — запитуємо
             fetch("/Run/GetQuestion", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -149,8 +120,7 @@
             });
         }
 
+
         loadQuestion();
     });
-
-
 </script>
