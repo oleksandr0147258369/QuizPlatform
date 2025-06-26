@@ -3,7 +3,7 @@
 	Layout = "_Layout";
 	ViewData["stylesheet"] = "tests/resultcard.css";
 }
-
+<div style="min-height: calc(100vh - 350px)">
 <div class="result-card">
 	<h3 class="full-name">@Model.FullName</h3>
 
@@ -15,4 +15,4 @@
 	<p><strong>Success Rate:</strong> @Model.SuccessPercentage %</p>
 	<p><strong>Time Spent:</strong> @Model.TimeSpent.ToString(@"hh\:mm\:ss")</p>
 	<p><strong>Time Per Question:</strong> @Model.TimePerQuestion.ToString(@"hh\:mm\:ss")</p>
-</div>
+</div></div>

@@ -19,10 +19,13 @@
         <p><strong>Created:</strong> @Model.CreatedUtc.ToShortDateString()</p>
 
         <div class="actions">
-            <a asp-controller="Tests" asp-action="Builder" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test</a>
-            <a asp-controller="Tests" asp-action="CreateHomework" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Homework</a>
             <a href="/Run/Code?code=@ViewContext.RouteData.Values["id"]" class="btn secondary">Pass Test</a>
-            <a asp-controller="Tests" asp-action="ResultsOfTests" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Results</a>
+            @if (User.IsInRole("teacher"))
+            {
+                <a asp-controller="Tests" asp-action="Builder" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn primary">Edit Test</a>
+                <a asp-controller="Tests" asp-action="CreateHomework" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Homework</a>
+                <a asp-controller="Tests" asp-action="ResultsOfTests" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn success">Results</a>
+            }
         </div>
     </div>
 

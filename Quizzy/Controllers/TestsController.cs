@@ -21,7 +21,7 @@ public class TestsController(UserManager<UserEntity> userManager,
         var results = _db.Results
         .Include(r => r.TestSession)
             .ThenInclude(ts => ts.UserEntity)
-        .Where(r => r.TestSession.TestId == id && !r.TestSession.IsTestHomework) // ? додано фільтр
+        .Where(r => r.TestSession.TestId == id && !r.TestSession.IsTestHomework) // ? пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         .Select(r => new ResultCardViewModel
         {
             ResultId = r.ResultId,
@@ -113,7 +113,7 @@ public class TestsController(UserManager<UserEntity> userManager,
         return View(homeworks);
     }
 
-    public async Task<IActionResult> PreviewHW(int id)  // або int TestHomeworkId
+    public async Task<IActionResult> PreviewHW(int id)  // пїЅпїЅпїЅ int TestHomeworkId
     {
         var homework = await _db.TestHomeworks
             .Include(hw => hw.Test)
@@ -195,7 +195,7 @@ public class TestsController(UserManager<UserEntity> userManager,
         _db.TestHomeworks.Remove(homework);
         await _db.SaveChangesAsync();
 
-        return RedirectToAction("MyHomework"); // або інша сторінка, куди повертати після видалення
+        return RedirectToAction("MyHomework"); // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 
     [HttpGet]
@@ -747,10 +747,12 @@ public class TestsController(UserManager<UserEntity> userManager,
             CreatedUtc = DateTime.UtcNow,
             HasDeadline = true,
             Deadline = deadlineUtc,
-            HasTimeToComplete = model.LimitTime,
-            TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
-                ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
-                : null
+            // HasTimeToComplete = model.LimitTime,
+            // TimeToComplete = model.LimitTime && model.TimeLimitMinutes.HasValue
+            //     ? TimeSpan.FromMinutes(model.TimeLimitMinutes.Value)
+            //     : null
+            HasTimeToComplete = false,
+            TimeToComplete = null
         };
 
         _db.TestHomeworks.Add(homework);

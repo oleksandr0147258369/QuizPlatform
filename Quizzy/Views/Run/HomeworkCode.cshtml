@@ -31,7 +31,7 @@
                 else
                 {
                     <!-- приховано передаємо код -->
-                    <input type="hidden" asp-for="HomeworkCode"/>
+                    <input type="hidden" asp-for="HomeworkCode" value="@Model.HomeworkCode" />
                 }
 
                 <div>
@@ -59,14 +59,8 @@
 <script>
     const hwcode = "@Model.Code";
 
-    // В localStorage зберігається сесія — якщо це нова сесія, старі значення очищаємо
-    // localStorage.clearSession - допоміжний флаг
-    const shouldClearStorage = localStorage.getItem("clearSession_" + hwcode);
-
-    if (shouldClearStorage === "true") {
-        ["currentIndex_", "timerRemaining_"].forEach(key => {
-            localStorage.removeItem(key + hwcode);
-        });
-        localStorage.setItem("clearSession_" + hwcode, "false");
-    }
+    // Очищення збережених даних
+    ["currentIndex_", "timerRemaining_"].forEach(key => {
+        localStorage.removeItem(key + hwcode);
+    });
 </script>
