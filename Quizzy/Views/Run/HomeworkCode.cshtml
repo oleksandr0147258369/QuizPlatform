@@ -1,0 +1,72 @@
+@using Microsoft.EntityFrameworkCore
+@using Quizzy.Models.Tests
+@model RunHomeworkTestViewModel 
+@{
+    ViewData["Title"] = "Code";
+    Layout = "_Layout";
+    ViewData["HasHeader"] = false;
+    ViewData["HasFooter"] = false;
+    ViewData["stylesheet"] = "Run/Code.css";
+}
+
+<body>
+    
+    <div class = "main">
+        <div class="Details">
+            <div class = "logo">
+                <img src="~/images/logos/Logo1.png" alt="logo">
+            </div>
+            <h1>Pass the test</h1>
+            <p>Enter the code of the homework<br>and your name</p>
+        </div>
+        <div class="form">
+            <form asp-controller="Run" asp-action="HomeworkCode" method="post">
+                @if (Model.FullView)
+                {
+                    <div>
+                        <label asp-for="HomeworkCode">Code (required)</label>
+                        <input type="number" asp-for="HomeworkCode" required>
+                    </div>
+                }
+                else
+                {
+                    <!-- приховано передаємо код -->
+                    <input type="hidden" asp-for="HomeworkCode"/>
+                }
+
+                <div>
+                    <label asp-for="Username">Name (required)</label>
+                    <input type="text" asp-for="Username" required>
+                </div>
+                <div class="submit">
+                    <input type="submit" value="Pass">
+                </div>
+
+                @if (!Model.IsSuccessful)
+                {
+                    <h3 style="color: red">@Model.Error</h3>
+                }
+            </form>
+        </div>
+       
+
+        
+    </div>
+
+ 
+    
+</body>
+<script>
+    const hwcode = "@Model.Code";
+
+    // В localStorage зберігається сесія — якщо це нова сесія, старі значення очищаємо
+    // localStorage.clearSession - допоміжний флаг
+    const shouldClearStorage = localStorage.getItem("clearSession_" + hwcode);
+
+    if (shouldClearStorage === "true") {
+        ["currentIndex_", "timerRemaining_"].forEach(key => {
+            localStorage.removeItem(key + hwcode);
+        });
+        localStorage.setItem("clearSession_" + hwcode, "false");
+    }
+</script>
