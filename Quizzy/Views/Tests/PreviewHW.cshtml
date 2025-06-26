@@ -1,0 +1,54 @@
+﻿@model Quizzy.Models.Tests.MyHomeworkViewModel
+@{
+	Layout = "_Layout";
+	ViewData["stylesheet"] = "tests/previewhw.css";
+}
+
+
+
+<div class="builder-container">
+    <h1 class="title">Test Overview</h1>
+
+    <div class="test-summary">
+        <h2>@Model.TestName</h2>
+        <p><strong>Join Code:</strong> @Model.TestHomeworkId</p>
+        <p><strong>Time Limit:</strong> @Model.TimeToComplete</p>
+        <p><strong>Author:</strong> @Model.HomeworkCreatedByFirstName @Model.HomeworkCreatedByLastName</p>
+        <p><strong>Created On:</strong> @Model.CreatedUtc.ToShortDateString()</p>
+
+        <div class="actions">
+            <form asp-action="DeleteHomework" asp-route-id="@Model.TestHomeworkId" method="post" onsubmit="return confirm('Are you sure you want to delete this homework assignment?');">
+                <button type="submit" class="btn danger">Delete Homework</button>
+            </form>
+        </div>
+    </div>
+
+    <hr />
+
+    <h3>Submission Results:</h3>
+
+    @if (Model.Results != null && Model.Results.Any())
+    {
+        <div class="results-list">
+            @foreach (var r in Model.Results)
+            {
+                <div class="result-card">
+                    <h4>@r.FullName</h4>
+
+                    <div class="progress-bar">
+                        <div class="progress" style="width:@r.SuccessPercentage%"></div>
+                    </div>
+
+                    <p><strong>Score:</strong> @r.Points / @r.TotalPoints</p>
+                    <p><strong>Success Rate:</strong> @r.SuccessPercentage%</p>
+                    <p><strong>Time Spent:</strong> @r.TimeSpent.ToString(@"hh\:mm\:ss")</p>
+                    <p><strong>Avg. Time per Question:</strong> @r.TimePerQuestion.ToString(@"mm\:ss")</p>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert">No one has completed this test yet.</div>
+    }
+</div>
